@@ -1,0 +1,16 @@
+{
+  "name": "com.bassmit.lineburst",
+  "displayName": "Line Burst",
+  "version": "0.1.0",
+  "unity": "2020.1",
+  "dependencies": {
+    "com.unity.collections": "0.15.0-preview.21",
+    "com.unity.mathematics": "1.2.1"
+  },
+  "description": "Draw lines in game and scene view. This contents of this package are largely taken from the Unity Physics package",
+  "author" : {
+    "name" : "Bas Smit",
+    "email" : "bas@bassmit.info",
+    "url" : "http://bassmit.info/"
+  }
+}
