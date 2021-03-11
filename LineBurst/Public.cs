@@ -24,7 +24,7 @@ namespace LineBurst
     //     }
     // }
 
-    struct Arrows
+    public struct Arrows
     {
         Lines _lines;
         public Arrows(int count)
@@ -58,7 +58,7 @@ namespace LineBurst
         }
     }
 
-    struct Planes
+    public struct Planes
     {
         Lines _lines;
         public Planes(int count)
@@ -100,7 +100,7 @@ namespace LineBurst
         }
     }
 
-    struct Arcs
+    public struct Arcs
     {
         Lines _lines;
         readonly int _res;
@@ -142,7 +142,7 @@ namespace LineBurst
         }
     }
 
-    struct Boxes
+    public struct Boxes
     {
         Lines _lines;
 
@@ -191,7 +191,7 @@ namespace LineBurst
         }
     }
 
-    struct Cones
+    public struct Cones
     {
         Lines _lines;
         const int Res = 16;
@@ -229,19 +229,21 @@ namespace LineBurst
         }
     }
 
-    struct Lines
+    public struct Lines
     {
         Unit _unit;
+
         public Lines(int count)
         {
             _unit = Unmanaged.Instance.Data.LineBufferAllocations.AllocateAtomic(count);
         }
 
-        public unsafe void Draw(NativeArray<Line> lines)
+        public static unsafe void Draw(NativeArray<Line> lines)
         {
-            var linesToCopy = math.min(lines.Length, _unit.End - _unit.Next);
-            Unmanaged.Instance.Data.LineBuffer.CopyFrom(lines.GetUnsafeReadOnlyPtr(), linesToCopy, _unit.Next);
-            _unit.Next += linesToCopy;
+            var l = new Lines(lines.Length);
+            var linesToCopy = math.min(lines.Length, l._unit.End - l._unit.Next);
+            Unmanaged.Instance.Data.LineBuffer.CopyFrom(lines.GetUnsafeReadOnlyPtr(), linesToCopy, l._unit.Next);
+            l._unit.Next += linesToCopy;
         }
 
         public void Draw(float3 begin, float3 end, Color color)
@@ -266,11 +268,6 @@ namespace LineBurst
         public static void Draw(float3 begin, float3 end, Color color)
         {
             new Lines(1).Draw(begin, end, color);
-        }
-
-        public static void Draw(NativeArray<Line> lines)
-        {
-            new Lines(lines.Length).Draw(lines);
         }
     }
 
@@ -298,6 +295,19 @@ namespace LineBurst
 
                 Arc.Draw(point, viewDir, arm, 2 * math.PI, color, false, resolution);
             }
+        }
+    }
+
+    public struct Transform
+    {
+        public static void Draw(float3 pos, quaternion rot, float size = 1) => Draw(pos, rot, 1, size);
+
+        public static void Draw(float3 pos, quaternion rot, float3 scale, float size = 1)
+        {
+            var lines = new Lines(3);
+            lines.Draw(pos, pos + math.mul(rot, new float3(scale.x * size, 0, 0)), Color.red);
+            lines.Draw(pos, pos + math.mul(rot, new float3(0, scale.y * size, 0)), Color.green);
+            lines.Draw(pos, pos + math.mul(rot, new float3(0, 0, scale.z * size)), Color.blue);
         }
     }
 }
