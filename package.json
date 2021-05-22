@@ -4,9 +4,9 @@
   "version": "0.2.0",
   "unity": "2020.3",
   "dependencies": {
-    "com.unity.collections": "0.17.0-preview.18"
+    "com.unity.collections": "0.15.0-preview.21"
   },
-  "description": "Draw lines in game and scene view. This contents of this package are largely taken from the Unity Physics package",
+  "description": "Draw large amounts of lines in game and scene view. The contents of this package are largely taken from the Unity Physics package",
   "author" : {
     "name" : "Bas Smit",
     "email" : "bas@bassmit.info",
