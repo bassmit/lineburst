@@ -1,0 +1,28 @@
+# Unity
+Library/
+Temp/
+Build/
+Logs/
+Ignored/
+Ignored.meta
+UserSettings/
+
+# Windows
+Thumbs.db*
+
+# Mac
+.DS_Store
+
+# Visual Studio
+*.aps
+*.suo
+*.DotSettings*
+bin/
+obj/
+*.sln
+*.csproj
+.vs/
+
+.idea
+*.userprefs
+*.user
