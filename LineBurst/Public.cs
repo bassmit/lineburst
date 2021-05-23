@@ -246,19 +246,37 @@ namespace LineBurst
 
         public static void Line(float3 begin, float3 end, Color color) => new Lines(1).Draw(begin, end, color);
 
-        // todo add Spheres
-        public static void Sphere(float3 point, float radius, Color color, int resolution = 16) => Sphere(point, radius, color, new float3(0, 1, 0), resolution);
-
-        public static void Sphere(float3 point, float radius, Color color, float3 viewDir, int resolution = 16)
+        public struct Spheres
         {
-            var hasViewDir = math.any(viewDir != new float3(0, 1, 0));
-            var arcs = new Arcs(hasViewDir ? 4 : 3, resolution);
-            arcs.Draw(point, new float3(0, 0, 1), new float3(radius, 0, 0), 2 * math.PI, color);
-            arcs.Draw(point, new float3(1, 0, 0), new float3(0, 0, radius), 2 * math.PI, color);
-            arcs.Draw(point, new float3(0, 1, 0), new float3(radius, 0, 0), 2 * math.PI, color);
-            if (hasViewDir)
-                arcs.Draw(point, viewDir, Math.GetPerpendicular(viewDir) * radius, 2 * math.PI, color);
+            Arcs _arcs;
+
+            public Spheres(int count, int resolution = 16)
+            {
+                _arcs = new Arcs(count * 3, resolution);
+            }
+
+            internal Spheres(int resolution)
+            {
+                _arcs = new Arcs(4, resolution);
+            }
+
+            internal void Draw(float3 point, float radius, float3 viewDir, Color color)
+            {
+                Draw(point, radius, color);
+                _arcs.Draw(point, viewDir, Math.GetPerpendicular(viewDir) * radius, 2 * math.PI, color);
+            }
+
+            public void Draw(float3 point, float radius, Color color)
+            {
+                _arcs.Draw(point, new float3(0, 0, 1), new float3(radius, 0, 0), 2 * math.PI, color);
+                _arcs.Draw(point, new float3(1, 0, 0), new float3(0, 0, radius), 2 * math.PI, color);
+                _arcs.Draw(point, new float3(0, 1, 0), new float3(radius, 0, 0), 2 * math.PI, color);
+            }
         }
+
+        public static void Sphere(float3 point, float radius, Color color, int resolution = 16) => new Spheres(1, resolution).Draw(point, radius, color);
+
+        public static void Sphere(float3 point, float radius, Color color, float3 viewDir, int resolution = 16) => new Spheres(resolution).Draw(point, radius, viewDir, color);
 
         public struct Transforms
         {
