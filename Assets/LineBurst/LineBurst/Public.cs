@@ -129,7 +129,19 @@ namespace LineBurst
 
         public static void Arc(float3 center, float3 normal, float3 arm, float angle, Color color, bool delimit = false, int resolution = 16) => new Arcs(1, resolution).Draw(center, normal, arm, angle, color, delimit);
 
-        // todo add Circles
+        public struct Circles
+        {
+            Arcs _arcs;
+
+            public Circles(int count, int resolution = 16)
+            {
+                _arcs = new Arcs(count, resolution);
+            }
+
+            public void Draw(float3 center, float radius, Color color) => _arcs.Draw(center, new float3(0, 1, 0), new float3(0, 0, radius), 2 * math.PI, color);
+            public void Draw(float3 center, float radius, float3 normal, Color color) => _arcs.Draw(center, normal, Math.GetPerpendicular(normal) * radius, 2 * math.PI, color);
+        }
+
         public static void Circle(float3 center, float radius, Color color, int resolution = 16) => new Arcs(1, resolution).Draw(center, new float3(0, 1, 0), new float3(0, 0, radius), 2 * math.PI, color);
         public static void Circle(float3 center, float radius, float3 normal, Color color, int resolution = 16) => new Arcs(1, resolution).Draw(center, normal, Math.GetPerpendicular(normal) * radius, 2 * math.PI, color);
 
@@ -248,16 +260,24 @@ namespace LineBurst
                 arcs.Draw(point, viewDir, Math.GetPerpendicular(viewDir) * radius, 2 * math.PI, color);
         }
 
-        // todo add Transforms
-        public static void Transform(float3 pos, quaternion rot, float size = 1) => Transform(pos, rot, 1, size);
-
-        public static void Transform(float3 pos, quaternion rot, float3 scale, float size = 1)
+        public struct Transforms
         {
-            var lines = new Lines(3);
-            lines.Draw(pos, pos + math.mul(rot, new float3(scale.x * size, 0, 0)), Color.red);
-            lines.Draw(pos, pos + math.mul(rot, new float3(0, scale.y * size, 0)), Color.green);
-            lines.Draw(pos, pos + math.mul(rot, new float3(0, 0, scale.z * size)), Color.blue);
+            Lines _lines;
+
+            public Transforms(int count)
+            {
+                _lines = new Lines(count * 3);
+            }
+
+            public void Draw(float3 pos, quaternion rot, float size = 1)
+            {
+                _lines.Draw(pos, pos + math.mul(rot, new float3(size, 0, 0)), Color.red);
+                _lines.Draw(pos, pos + math.mul(rot, new float3(0, size, 0)), Color.green);
+                _lines.Draw(pos, pos + math.mul(rot, new float3(0, 0, size)), Color.blue);
+            }
         }
+
+        public static void Transform(float3 pos, quaternion rot, float size = 1) => new Transforms(1).Draw(pos, rot, size);
     }
 
     public struct Line
