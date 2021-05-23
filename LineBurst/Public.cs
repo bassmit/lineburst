@@ -129,6 +129,22 @@ namespace LineBurst
 
         public static void Arc(float3 center, float3 normal, float3 arm, float angle, Color color, bool delimit = false, int resolution = 16) => new Arcs(1, resolution).Draw(center, normal, arm, angle, color, delimit);
 
+        public struct Circles
+        {
+            Arcs _arcs;
+
+            public Circles(int count, int resolution = 16)
+            {
+                _arcs = new Arcs(count, resolution);
+            }
+
+            public void Draw(float3 center, float radius, Color color) => _arcs.Draw(center, new float3(0, 1, 0), new float3(0, 0, radius), 2 * math.PI, color);
+            public void Draw(float3 center, float radius, float3 normal, Color color) => _arcs.Draw(center, normal, Math.GetPerpendicular(normal) * radius, 2 * math.PI, color);
+        }
+
+        public static void Circle(float3 center, float radius, Color color, int resolution = 16) => new Arcs(1, resolution).Draw(center, new float3(0, 1, 0), new float3(0, 0, radius), 2 * math.PI, color);
+        public static void Circle(float3 center, float radius, float3 normal, Color color, int resolution = 16) => new Arcs(1, resolution).Draw(center, normal, Math.GetPerpendicular(normal) * radius, 2 * math.PI, color);
+
         public struct Boxes
         {
             Lines _lines;
@@ -230,42 +246,56 @@ namespace LineBurst
 
         public static void Line(float3 begin, float3 end, Color color) => new Lines(1).Draw(begin, end, color);
 
-        // todo add Spheres
-        public static void Sphere(float3 point, float radius, Color color, int resolution = 16) => Sphere(point, radius, color, new float3(0, 1, 0), resolution);
-
-        public static void Sphere(float3 point, float radius, Color color, float3 viewDir, int resolution = 16)
+        public struct Spheres
         {
-            // todo use Arcs
-            Arc(point, new float3(0, 0, 1), new float3(radius, 0, 0), 2 * math.PI, color, false, resolution);
-            Arc(point, new float3(1, 0, 0), new float3(0, 0, radius), 2 * math.PI, color, false, resolution);
-            Arc(point, new float3(0, 1, 0), new float3(radius, 0, 0), 2 * math.PI, color, false, resolution);
+            Arcs _arcs;
 
-            if (math.any(viewDir != new float3(0, 1, 0)))
+            public Spheres(int count, int resolution = 16)
             {
-                float3 arm;
-                if (viewDir.x == 0)
-                    arm = new float3(radius, 0, 0);
-                else if (viewDir.y == 0)
-                    arm = new float3(0, radius, 0);
-                else if (viewDir.z == 0)
-                    arm = new float3(0, 0, radius);
-                else
-                    arm = math.normalize(new float3(1, 0, -(1 / viewDir.z) * viewDir.x)) * radius;
+                _arcs = new Arcs(count * 3, resolution);
+            }
 
-                Arc(point, viewDir, arm, 2 * math.PI, color, false, resolution);
+            internal Spheres(int resolution)
+            {
+                _arcs = new Arcs(4, resolution);
+            }
+
+            internal void Draw(float3 point, float radius, float3 viewDir, Color color)
+            {
+                Draw(point, radius, color);
+                _arcs.Draw(point, viewDir, Math.GetPerpendicular(viewDir) * radius, 2 * math.PI, color);
+            }
+
+            public void Draw(float3 point, float radius, Color color)
+            {
+                _arcs.Draw(point, new float3(0, 0, 1), new float3(radius, 0, 0), 2 * math.PI, color);
+                _arcs.Draw(point, new float3(1, 0, 0), new float3(0, 0, radius), 2 * math.PI, color);
+                _arcs.Draw(point, new float3(0, 1, 0), new float3(radius, 0, 0), 2 * math.PI, color);
             }
         }
 
-        // todo add Transforms
-        public static void Transform(float3 pos, quaternion rot, float size = 1) => Transform(pos, rot, 1, size);
+        public static void Sphere(float3 point, float radius, Color color, int resolution = 16) => new Spheres(1, resolution).Draw(point, radius, color);
 
-        public static void Transform(float3 pos, quaternion rot, float3 scale, float size = 1)
+        public static void Sphere(float3 point, float radius, Color color, float3 viewDir, int resolution = 16) => new Spheres(resolution).Draw(point, radius, viewDir, color);
+
+        public struct Transforms
         {
-            var lines = new Lines(3);
-            lines.Draw(pos, pos + math.mul(rot, new float3(scale.x * size, 0, 0)), Color.red);
-            lines.Draw(pos, pos + math.mul(rot, new float3(0, scale.y * size, 0)), Color.green);
-            lines.Draw(pos, pos + math.mul(rot, new float3(0, 0, scale.z * size)), Color.blue);
+            Lines _lines;
+
+            public Transforms(int count)
+            {
+                _lines = new Lines(count * 3);
+            }
+
+            public void Draw(float3 pos, quaternion rot, float size = 1)
+            {
+                _lines.Draw(pos, pos + math.mul(rot, new float3(size, 0, 0)), Color.red);
+                _lines.Draw(pos, pos + math.mul(rot, new float3(0, size, 0)), Color.green);
+                _lines.Draw(pos, pos + math.mul(rot, new float3(0, 0, size)), Color.blue);
+            }
         }
+
+        public static void Transform(float3 pos, quaternion rot, float size = 1) => new Transforms(1).Draw(pos, rot, size);
     }
 
     public struct Line
