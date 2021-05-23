@@ -6,7 +6,7 @@
   "dependencies": {
     "com.unity.collections": "0.15.0-preview.21"
   },
-  "description": "Draw large amounts of lines in game and scene view. The contents of this package are largely taken from the Unity Physics package",
+  "description": "Draw large amounts of lines and shapes to the game and scene view. The contents of this package are largely taken from the Unity Physics package",
   "author" : {
     "name" : "Bas Smit",
     "email" : "bas@bassmit.info",
