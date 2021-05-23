@@ -33,5 +33,7 @@ namespace LineBurst
             float3 cross = math.cross(v, dir);
             q = cross * invLength;
         }
+
+        public static float3 GetPerpendicular(float3 v) => math.abs(v.y) > 1 - 1e-6f ? new float3(0, 0, 1) : math.normalize(math.cross(new float3(0, 1, 0), v));
     }
 }
