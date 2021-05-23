@@ -239,25 +239,13 @@ namespace LineBurst
 
         public static void Sphere(float3 point, float radius, Color color, float3 viewDir, int resolution = 16)
         {
-            // todo use Arcs
-            Arc(point, new float3(0, 0, 1), new float3(radius, 0, 0), 2 * math.PI, color, false, resolution);
-            Arc(point, new float3(1, 0, 0), new float3(0, 0, radius), 2 * math.PI, color, false, resolution);
-            Arc(point, new float3(0, 1, 0), new float3(radius, 0, 0), 2 * math.PI, color, false, resolution);
-
-            if (math.any(viewDir != new float3(0, 1, 0)))
-            {
-                float3 arm;
-                if (viewDir.x == 0)
-                    arm = new float3(radius, 0, 0);
-                else if (viewDir.y == 0)
-                    arm = new float3(0, radius, 0);
-                else if (viewDir.z == 0)
-                    arm = new float3(0, 0, radius);
-                else
-                    arm = math.normalize(new float3(1, 0, -(1 / viewDir.z) * viewDir.x)) * radius;
-
-                Arc(point, viewDir, arm, 2 * math.PI, color, false, resolution);
-            }
+            var hasViewDir = math.any(viewDir != new float3(0, 1, 0));
+            var arcs = new Arcs(hasViewDir ? 4 : 3, resolution);
+            arcs.Draw(point, new float3(0, 0, 1), new float3(radius, 0, 0), 2 * math.PI, color);
+            arcs.Draw(point, new float3(1, 0, 0), new float3(0, 0, radius), 2 * math.PI, color);
+            arcs.Draw(point, new float3(0, 1, 0), new float3(radius, 0, 0), 2 * math.PI, color);
+            if (hasViewDir)
+                arcs.Draw(point, viewDir, Math.GetPerpendicular(viewDir) * radius, 2 * math.PI, color);
         }
 
         // todo add Transforms
