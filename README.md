@@ -1,8 +1,9 @@
+# LineBurst
 <p align="center">
   <img src="https://github.com/bassmit/images/blob/master/LineBurst/lineburst01.png?raw=true">
 </p>
 
-# LineBurst
+## Introduction
 Draw large amounts of lines and shapes to the Unity Game and Scene View, from BURST compiled jobs or MonoBehaviours. The contents of this package are largely taken from the Unity Physics package.
 
 ## Installation
@@ -25,10 +26,10 @@ Note that you will not be notified of updates to LineBurst, or other packages in
 ## Getting Started
 Create a LineBurstRenderer behaviour, then use the thread safe static APIs like:
  
-    Draw.Line(a, b);
+    Draw.Line(a, b, Color.red);
      
 When the amount of elements to be drawn is known allocate the required buffer in one operation:
 
     var spheres = new Draw.Spheres(x);
-    for (int i = 0; i < y; i++)
+    for (int i = 0; i < x; i++)
         spheres.Draw(/*...*/);
