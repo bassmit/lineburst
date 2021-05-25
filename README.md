@@ -26,7 +26,7 @@ Note that you will not be notified of updates to LineBurst, or other packages in
 ## Getting Started
 Create a LineBurstRenderer behaviour, then use the thread safe static APIs like:
  
-    Draw.Line(a, b);
+    Draw.Line(a, b, Color.red);
      
 When the amount of elements to be drawn is known allocate the required buffer in one operation:
 
