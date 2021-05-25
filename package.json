@@ -1,0 +1,22 @@
+{
+  "name": "com.bassmit.lineburst",
+  "displayName": "Line Burst",
+  "version": "0.2.3",
+  "unity": "2020.3",
+  "dependencies": {
+    "com.unity.collections": "0.15.0-preview.21"
+  },
+  "description": "Draw large amounts of lines and shapes to the game and scene view. The contents of this package are largely taken from the Unity Physics package",
+  "author" : {
+    "name" : "Bas Smit",
+    "email" : "bas@bassmit.info",
+    "url" : "http://bassmit.info/"
+  },
+  "samples": [
+    {
+      "displayName": "LineBurst Samples",
+      "description": "LineBurst Samples",
+      "path": "Samples~"
+    }
+  ]
+}
