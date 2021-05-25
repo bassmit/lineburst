@@ -30,5 +30,5 @@ Create a LineBurstRenderer behaviour, then use the thread safe static APIs like:
 When the amount of elements to be drawn is known allocate the required buffer in one operation:
 
     var spheres = new Draw.Spheres(x);
-    for (int i = 0; i < y; i++)
+    for (int i = 0; i < x; i++)
         spheres.Draw(/*...*/);
