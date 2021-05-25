@@ -1,7 +1,7 @@
 {
   "name": "com.bassmit.lineburst",
   "displayName": "Line Burst",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "unity": "2020.3",
   "dependencies": {
     "com.unity.collections": "0.15.0-preview.21"
@@ -11,5 +11,12 @@
     "name" : "Bas Smit",
     "email" : "bas@bassmit.info",
     "url" : "http://bassmit.info/"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "LineBurst Samples",
+      "description": "LineBurst Samples",
+      "path": "Samples~"
+    }
+  ]
 }

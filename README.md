@@ -2,8 +2,8 @@
   <img src="https://github.com/bassmit/images/blob/master/LineBurst/lineburst01.png?raw=true">
 </p>
 
-# Line Burst
-Unity package for drawing large amounts of lines and shapes to the game and scene view, from BURST compiled jobs or MonoBehaviours. The contents of this package are largely taken from the Unity Physics package.
+# LineBurst
+Draw large amounts of lines and shapes to the Unity Game and Scene View, from BURST compiled jobs or MonoBehaviours. The contents of this package are largely taken from the Unity Physics package.
 
 ## Installation
 To have a quick look at LineBurst clone or download the master branch which contains a full Unity 2020.3 LTS project.
@@ -23,4 +23,12 @@ And enter the url:
 Note that you will not be notified of updates to LineBurst, or other packages installed in this way.
  
 ## Getting Started
-Create a LineBurstRenderer behaviour, then use the thread safe static APIs like Draw.Line. When the amount of elements to be drawn is known use create structs like Draw.Lines to allocate the required buffer in one operation.
+Create a LineBurstRenderer behaviour, then use the thread safe static APIs like:
+ 
+    Draw.Line(a, b);
+     
+When the amount of elements to be drawn is known allocate the required buffer in one operation:
+
+    var spheres = new Draw.Spheres(x);
+    for (int i = 0; i < y; i++)
+        spheres.Draw(/*...*/);

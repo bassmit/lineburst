@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/scene.unity
+    path: Assets/LineBurst/Samples/LineBurstSampleScene.unity
     guid: 5a59057bfad3d9147b627a8fc38b878a
   m_configObjects: {}
