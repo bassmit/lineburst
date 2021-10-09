@@ -310,4 +310,13 @@ namespace LineBurst
             End = new float4(end, packedColor);
         }
     }
+    
+    public struct Plot{}
+
+    public struct Font
+    {
+        float2 Size;
+        NativeArray<int2> Indices;
+        NativeArray<float2> Vertices;
+    }
 }
