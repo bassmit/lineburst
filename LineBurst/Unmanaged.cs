@@ -10,10 +10,13 @@ namespace LineBurst
         internal Unit LineBufferAllocations;
         internal LineBuffer LineBuffer;
         internal bool Initialized;
+
+        internal Font Font;
         // internal UnsafeArray<float4> ColorData;
 
-        internal void Initialize(int maxLines)
+        internal void Initialize(int maxLines, Font font)
         {
+            Font = font;
             if (Initialized == false)
             {
                 LineBuffer = new LineBuffer(maxLines);
