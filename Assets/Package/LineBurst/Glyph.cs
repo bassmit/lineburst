@@ -5,7 +5,7 @@ using UnityEngine;
 namespace LineBurst.Authoring
 {
     [Serializable]
-    class Glyph
+    public class Glyph
     {
         public Line[] Lines = new Line[0];
 

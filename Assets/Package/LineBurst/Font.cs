@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LineBurst.Authoring
 {
-    class Font : MonoBehaviour
+    public class Font : MonoBehaviour
     {
         internal const int FirstAscii = 33;
         const int FinalAscii = 126;

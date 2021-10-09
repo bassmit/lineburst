@@ -1,3 +1,4 @@
+using LineBurst.Authoring;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
@@ -296,6 +297,11 @@ namespace LineBurst
         }
 
         public static void Transform(float3 pos, quaternion rot, float size = 1) => new Transforms(1).Draw(pos, rot, size);
+
+        public static void Text(FixedString512 text, Matrix4x4 transform, Color color)
+        {
+            Unmanaged.Instance.Data.Font.Draw(text, transform, color);
+        }
     }
 
     public struct Line
@@ -311,12 +317,37 @@ namespace LineBurst
         }
     }
     
-    public struct Plot{}
-
     public struct Font
     {
-        float2 Size;
-        NativeArray<int2> Indices;
-        NativeArray<float2> Vertices;
+        public float2 Size;
+        public NativeArray<int2>.ReadOnly Indices;
+        public NativeArray<Glyph.Line>.ReadOnly Lines;
+
+        public void Draw(FixedString512 text, Matrix4x4 transform, Color color)
+        {
+            var offset = float2.zero;
+            
+            for (int i = 0; i < text.Length; i++)
+            {
+                // todo get nr from one place
+                var c = text[i] - 33;
+
+                if (c >= 0 && c < Indices.Length)
+                {
+                    var ind = Indices[c];
+                    var amount = ind.y - ind.x;
+                    var lines = new Draw.Lines(amount);
+                    for (int j = ind.x; j < ind.y; j++)
+                    {
+                        var line = Lines[j];
+                        var o = math.mul(transform, new float4(Size * (offset + line.Org), 0, 1)).xyz;
+                        var d = math.mul(transform, new float4(Size * (offset + line.Dest), 0, 1)).xyz;
+                        lines.Draw(o, d, color);
+                    }
+                }
+
+                ++offset.x;
+            }
+        }
     }
 }
