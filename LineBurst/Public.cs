@@ -343,7 +343,7 @@ namespace LineBurst
                     continue;
                 }
 
-                if (c >= FirstAscii && c < FinalAscii)
+                if (c >= FirstAscii && c <= FinalAscii)
                 {
                     var ind = Indices[c - FirstAscii];
                     var amount = ind.y - ind.x;
