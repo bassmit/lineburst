@@ -22,14 +22,13 @@ class BurstTestSystem : SystemBase
             .WithBurst()
             .WithCode(() =>
             {
-                // Draw.Sphere(new float3(-2, 0, 0), 1, Color.black, 64);
-                // Draw.Circle(new float3(3, 0, 0), .7f, normal, Color.magenta, 64);
-                // Draw.Box(1, new float3(-2, 3, 0), quaternion.EulerYXZ(math.radians(new float3(20, 30, 40))), Color.green);
-                // Draw.Arrow(new float3(1, 2, 0), new float3(0, 2, 0), Color.white);
-                // Draw.Transform(new float3(3, 2.5f, 0), quaternion.RotateY(math.radians(30)));
-                // Draw.Cone(new float3(-.2f, -.5f, 0), 1, math.radians(20), Color.red);
-                
-                Draw.Text("HELLO WORLD!", Matrix4x4.identity, Color.magenta);
+                Draw.Sphere(new float3(-2, 0, 0), 1, Color.black, 64);
+                Draw.Circle(new float3(3, 0, 0), .7f, normal, Color.magenta, 64);
+                Draw.Box(1, new float3(-2, 3, 0), quaternion.EulerYXZ(math.radians(new float3(20, 30, 40))), Color.green);
+                Draw.Arrow(new float3(1, 2, 0), new float3(0, 2, 0), Color.white);
+                Draw.Transform(new float3(3, 2.5f, 0), quaternion.RotateY(math.radians(30)));
+                Draw.Cone(new float3(-.2f, -.5f, 0), 1, math.radians(20), Color.red);
+                Draw.Text("HELLO WORLD!", Matrix4x4.TRS(new float3(-.6f, -1.5f, 0), quaternion.identity, new float3(.6f)), Color.magenta);
             })
             .Schedule();
     }

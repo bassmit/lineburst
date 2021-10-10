@@ -44,13 +44,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Size:
-    x: 0.6
+    x: 0.4
     y: 1
   MarginBottom: 0.25
   MarginTop: 0.25
-  MarginSide: 0.2
+  MarginSide: 0.15
   Glyphs:
-  - Lines: []
+  - Lines:
+    - Org:
+        x: 0.5
+        y: 1
+      Dest:
+        x: 0.5
+        y: 0.2
+    - Org:
+        x: 0.5
+        y: 0.1
+      Dest:
+        x: 0.5
+        y: 0
   - Lines: []
   - Lines: []
   - Lines: []

@@ -42,9 +42,14 @@ namespace LineBurst
                 var end = start + glyph.Lines.Length;
                 _indices.Add(new int2(start, end));
                 start = end;
-                
-                foreach (var line in glyph.Lines) 
+
+                for (var i = 0; i < glyph.Lines.Length; i++)
+                {
+                    var line = glyph.Lines[i];
+                    line.Org = ToGlyphSpace(line.Org);
+                    line.Dest = ToGlyphSpace(line.Dest);
                     _lines.Add(line);
+                }
             }
 
             var font = new Font
@@ -57,6 +62,13 @@ namespace LineBurst
             Assert.IsTrue(Managed.Instance == null);
             Managed.Instance = new Managed(MaxLines, LineMaterial, font);
             RenderPipelineManager.endFrameRendering += (arg1, arg2) => GameViewRender();
+        }
+
+        float2 ToGlyphSpace(float2 pos)
+        {
+            pos.x = Font.MarginSide * Font.Size.x + pos.x * ((1 - 2 * Font.MarginSide) * Font.Size.x);
+            pos.y = Font.MarginBottom * Font.Size.y + pos.y * ((1 - (Font.MarginBottom + Font.MarginTop)) * Font.Size.y);
+            return pos;
         }
 
         void OnPostRender()

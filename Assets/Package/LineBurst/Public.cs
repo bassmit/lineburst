@@ -329,9 +329,18 @@ namespace LineBurst
             
             for (int i = 0; i < text.Length; i++)
             {
-                // todo get nr from one place
-                var c = text[i] - 33;
+                var c = (int) text[i];
 
+                if (c == '\n')
+                {
+                    offset.x = 0;
+                    offset.y -= Size.y;
+                    continue;
+                }
+
+                // todo get nr from one place
+                c -= 33;
+                
                 if (c >= 0 && c < Indices.Length)
                 {
                     var ind = Indices[c];
@@ -340,13 +349,13 @@ namespace LineBurst
                     for (int j = ind.x; j < ind.y; j++)
                     {
                         var line = Lines[j];
-                        var o = math.mul(transform, new float4(Size * (offset + line.Org), 0, 1)).xyz;
-                        var d = math.mul(transform, new float4(Size * (offset + line.Dest), 0, 1)).xyz;
+                        var o = math.mul(transform, new float4(offset + line.Org, 0, 1)).xyz;
+                        var d = math.mul(transform, new float4(offset + line.Dest, 0, 1)).xyz;
                         lines.Draw(o, d, color);
                     }
                 }
 
-                ++offset.x;
+                offset.x += Size.x;
             }
         }
     }
