@@ -302,6 +302,8 @@ namespace LineBurst
         {
             Unmanaged.Instance.Data.Font.Draw(text, transform, color);
         }
+        
+        public static float2 FontSize => Unmanaged.Instance.Data.Font.Size;
     }
 
     public struct Line
@@ -317,11 +319,14 @@ namespace LineBurst
         }
     }
     
-    public struct Font
+    struct Font
     {
-        public float2 Size;
-        public NativeArray<int2>.ReadOnly Indices;
-        public NativeArray<Glyph.Line>.ReadOnly Lines;
+        internal const int FirstAscii = 33;
+        internal const int FinalAscii = 126;
+
+        internal float2 Size;
+        internal NativeArray<int2>.ReadOnly Indices;
+        internal NativeArray<Glyph.Line>.ReadOnly Lines;
 
         public void Draw(FixedString512 text, Matrix4x4 transform, Color color)
         {
@@ -338,12 +343,9 @@ namespace LineBurst
                     continue;
                 }
 
-                // todo get nr from one place
-                c -= 33;
-                
-                if (c >= 0 && c < Indices.Length)
+                if (c >= FirstAscii && c < FinalAscii)
                 {
-                    var ind = Indices[c];
+                    var ind = Indices[c - FirstAscii];
                     var amount = ind.y - ind.x;
                     var lines = new Draw.Lines(amount);
                     for (int j = ind.x; j < ind.y; j++)

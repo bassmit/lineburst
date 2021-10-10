@@ -5,9 +5,7 @@ namespace LineBurst.Authoring
 {
     public class Font : MonoBehaviour
     {
-        internal const int FirstAscii = 33;
-        const int FinalAscii = 126;
-        const int GlyphAmount = FinalAscii - FirstAscii + 1;
+        const int GlyphAmount = LineBurst.Font.FinalAscii - LineBurst.Font.FirstAscii + 1;
         public float2 Size;
         public float MarginBottom = .25f;
         public float MarginTop = .75f;

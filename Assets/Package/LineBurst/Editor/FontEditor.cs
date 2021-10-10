@@ -89,7 +89,7 @@ namespace LineBurst.Authoring
             var isOrg = _editingVertex % 2 == 0;
             
             GUILayout.Label($"Glyph: {_editingGlyph}/{glyphs.Length - 1}");
-            GUILayout.Label($"Expected: \"{(char) (Font.FirstAscii + _editingGlyph)}\"");
+            GUILayout.Label($"Expected: \"{(char) (LineBurst.Font.FirstAscii + _editingGlyph)}\"");
             if (GUILayout.Button("Previous", GUILayout.Width(Width)))
                 SetEditingGlyph(_editingGlyph == 0 ? glyphs.Length - 1 : _editingGlyph - 1);
             if (GUILayout.Button("Next", GUILayout.Width(Width)))
