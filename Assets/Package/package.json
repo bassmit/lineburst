@@ -1,7 +1,7 @@
 {
   "name": "com.bassmit.lineburst",
   "displayName": "LineBurst",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "unity": "2020.3",
   "dependencies": {
     "com.unity.entities": "0.17.0-preview.42"
