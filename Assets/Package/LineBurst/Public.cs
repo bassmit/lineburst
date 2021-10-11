@@ -237,14 +237,14 @@ namespace LineBurst
             {
                 var l = new Lines(lines.Length);
                 var linesToCopy = math.min(lines.Length, l._unit.End - l._unit.Next);
-                Unmanaged.Instance.Data.LineBuffer.CopyFrom(lines.GetUnsafeReadOnlyPtr(), linesToCopy, l._unit.Next);
+                Unmanaged.Instance.Data.CopyFrom(lines.GetUnsafeReadOnlyPtr(), linesToCopy, l._unit.Next);
                 l._unit.Next += linesToCopy;
             }
 
             public void Draw(float3 begin, float3 end, Color color)
             {
                 if (_unit.Next < _unit.End)
-                    Unmanaged.Instance.Data.LineBuffer.SetLine(new Line(begin, end, color), _unit.Next++);
+                    Unmanaged.Instance.Data.SetLine(new Line(begin, end, color), _unit.Next++);
             }
         }
 

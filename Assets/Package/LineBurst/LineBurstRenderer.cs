@@ -94,7 +94,7 @@ namespace LineBurst
         public static void Clear()
         {
             if (Managed.Instance != null)
-                Managed.Instance.Clear();
+                Managed.Clear();
         }
 
 #if UNITY_EDITOR
