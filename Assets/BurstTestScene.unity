@@ -202,7 +202,7 @@ Camera:
   m_GameObject: {fileID: 221595756}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -266,7 +266,7 @@ MonoBehaviour:
   DrawInGameView: 1
   AutoClear: 1
   LineMaterial: {fileID: 2100000, guid: 79cf78c8762f66c4281f6fda01e695b0, type: 2}
-  Font: {fileID: 1816785126561671821, guid: bcb2c00c2d585c9448fe3cc2cc1558ee, type: 3}
+  Font: {fileID: 0}
 --- !u!1 &481939118
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,10 +1,10 @@
 # LineBurst
 <p align="center">
-  <img src="https://github.com/bassmit/images/blob/master/LineBurst/lineburst01.png?raw=true">
+  <img src="https://github.com/bassmit/images/blob/master/LineBurst/lineburst02.png?raw=true">
 </p>
 
 ## Introduction
-Draw large amounts of lines, shapes and text to the Unity Game and Scene View, from BURST compiled jobs or MonoBehaviours. The contents of this package are largely taken from the Unity Physics package.
+Draw large amounts of debug lines, shapes and text to the Unity Game and Scene View, from BURST compiled jobs or MonoBehaviours. The contents of this package are largely taken from the Unity Physics package.
 
 ## Installation
 To have a quick look at LineBurst clone or download the master branch which contains a full Unity 2020.3 LTS project.
