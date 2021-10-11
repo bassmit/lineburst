@@ -73,7 +73,7 @@ namespace LineBurst.Authoring
         float2 ToGlyphSpace(float2 pos)
         {
             pos.x = MarginSide * Size.x + pos.x * ((1 - 2 * MarginSide) * Size.x);
-            pos.y = MarginBottom * Size.y + pos.y * ((1 - (MarginBottom + MarginTop)) * Size.y);
+            pos.y = MarginBottom * Size.y + pos.y * ((1 - (MarginBottom + MarginTop)) * Size.y) - Size.y;
             return pos;
         }
     }

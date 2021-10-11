@@ -27,8 +27,7 @@ namespace LineBurst
                 throw new Exception("LineBurstRenderer needs to be attached to the camera gameobject to draw in the game view");
 
             Assert.IsTrue(Managed.Instance == null);
-            var font = Font == null ? Resources.Load<Authoring.Font>("LineBurst Default Font") : Font;
-            Managed.Instance = new Managed(MaxLines, LineMaterial, font.Convert());
+            Managed.Instance = new Managed(MaxLines, LineMaterial, Font.Convert());
             RenderPipelineManager.endFrameRendering += (arg1, arg2) => GameViewRender();
         }
 
@@ -99,6 +98,8 @@ namespace LineBurst
         {
             if (LineMaterial == null)
                 LineMaterial = Resources.Load<Material>("LineBurstLineMaterial");
+            if (Font == null)
+                Font = Resources.Load<Authoring.Font>("LineBurstDefaultFont");
         }
 #endif
     }
