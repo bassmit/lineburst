@@ -1,7 +1,6 @@
 using System;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using Unity.Mathematics;
 
 namespace LineBurst
 {
@@ -34,37 +33,6 @@ namespace LineBurst
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref array, AtomicSafetyHandle.GetTempUnsafePtrSliceHandle());
 #endif
             return array;
-        }
-    }
-
-    struct LineBuffer : IDisposable
-    {
-        internal UnsafeArray<float4> Instance;
-
-        internal LineBuffer(int KMaxLines)
-        {
-            Instance = new UnsafeArray<float4>(KMaxLines * 2);
-        }
-
-        internal void SetLine(Line line, int index)
-        {
-            Instance[index * 2] = line.Begin;
-            Instance[index * 2 + 1] = line.End;
-        }
-
-        public void Dispose()
-        {
-            Instance.Dispose();
-        }
-
-        internal Unit AllocateAll()
-        {
-            return new Unit(Instance.Length / 2);
-        }
-
-        internal unsafe void CopyFrom(void* ptr, int amount, int offset)
-        {
-            UnsafeUtility.MemCpy(Instance.GetUnsafePtr() + 2 * offset, ptr, amount * UnsafeUtility.SizeOf<Line>());
         }
     }
 }

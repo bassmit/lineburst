@@ -1,5 +1,6 @@
 using System;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -20,11 +21,11 @@ namespace LineBurst
         internal static Managed Instance;
         bool _warned;
 
-        internal Managed(int maxLines, Material lineMaterial)
+        internal Managed(int maxLines, Material lineMaterial, BlobAssetReference<Font> font)
         {
             if (lineMaterial == null)
                 throw new Exception("Line burst line material not assigned");
-            Unmanaged.Instance.Data.Initialize(maxLines);
+            Unmanaged.Instance.Data.Initialize(maxLines, font);
             _lineMaterial = lineMaterial;
 #if !UNITY_DOTSRUNTIME
             AppDomain.CurrentDomain.DomainUnload += OnDomainUnload;
@@ -51,7 +52,7 @@ namespace LineBurst
             //     _colorBuffer.SetData(Unmanaged.Instance.Data.ColorData.ToNativeArray());
             // }
 
-            if (_vertexBuffer == null || _vertexBuffer.count != Unmanaged.Instance.Data.LineBuffer.Instance.Length)
+            if (_vertexBuffer == null || _vertexBuffer.count != Unmanaged.Instance.Data.LineBuffer.Length)
             {
                 if (_vertexBuffer != null)
                 {
@@ -59,7 +60,7 @@ namespace LineBurst
                     _vertexBuffer = null;
                 }
 
-                _vertexBuffer = new ComputeBuffer(Unmanaged.Instance.Data.LineBuffer.Instance.Length, UnsafeUtility.SizeOf<float4>());
+                _vertexBuffer = new ComputeBuffer(Unmanaged.Instance.Data.LineBuffer.Length, UnsafeUtility.SizeOf<float4>());
                 _lineMaterial.SetBuffer(VertexBuffer, _vertexBuffer);
             }
 
@@ -70,10 +71,10 @@ namespace LineBurst
                 Debug.Log($"### Warning - Maximum number of lines reached, additional lines will not be drawn");
             }
 
-            _vertexBuffer.SetData(Unmanaged.Instance.Data.LineBuffer.Instance.ToNativeArray(), 0, 0, _vertsTodraw);
+            _vertexBuffer.SetData(Unmanaged.Instance.Data.LineBuffer.ToNativeArray(), 0, 0, _vertsTodraw);
         }
 
-        internal void Clear()
+        internal static void Clear()
         {
             Unmanaged.Instance.Data.Clear();
         }
