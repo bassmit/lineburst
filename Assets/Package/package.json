@@ -4,7 +4,7 @@
   "version": "0.3.0",
   "unity": "2020.3",
   "dependencies": {
-    "com.unity.collections": "0.15.0-preview.21"
+    "com.unity.entities": "0.17.0-preview.42"
   },
   "description": "Draw large amounts of lines, shapes and text to the game and scene view. The contents of this package are largely taken from the Unity Physics package",
   "author" : {
