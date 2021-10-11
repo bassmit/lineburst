@@ -12,10 +12,12 @@ namespace LineBurst
         internal LineBuffer LineBuffer;
         internal bool Initialized;
 
+        internal BlobAssetReference<Font> Font;
         // internal UnsafeArray<float4> ColorData;
 
-        internal void Initialize(int maxLines)
+        internal void Initialize(int maxLines, BlobAssetReference<Font> font)
         {
+            Font = font;
             if (Initialized == false)
             {
                 LineBuffer = new LineBuffer(maxLines);

@@ -30,10 +30,8 @@ namespace LineBurst
             if (DrawInGameView && GetComponent<Camera>() == null)
                 throw new Exception("LineBurstRenderer needs to be attached to the camera gameobject to draw in the game view");
 
-            Draw.Font = Font.Convert();
-
             Assert.IsTrue(Managed.Instance == null);
-            Managed.Instance = new Managed(MaxLines, LineMaterial);
+            Managed.Instance = new Managed(MaxLines, LineMaterial, Font.Convert());
             RenderPipelineManager.endFrameRendering += (arg1, arg2) => GameViewRender();
         }
 

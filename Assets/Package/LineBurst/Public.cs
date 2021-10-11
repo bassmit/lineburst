@@ -301,9 +301,12 @@ namespace LineBurst
 
         public static void Transform(float3 pos, quaternion rot, float size = 1) => new Transforms(1).Draw(pos, rot, size);
 
-        public static void Text(FixedString512 text, Matrix4x4 transform, Color color) => Font.Value.Draw(text, transform, color);
-
-        public static float2 FontSize => Font.Value.Size;
+        public static void Text(FixedString512 text, Matrix4x4 transform, Color color)
+        {
+            Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+        }
+        
+        public static float2 FontSize => Unmanaged.Instance.Data.Font.Value.Size;
     }
 
     public struct Line
