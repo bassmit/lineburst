@@ -46,6 +46,7 @@ MonoBehaviour:
   Size:
     x: 0.4
     y: 1
+  TotalLines: 142
   MarginBottom: 0.25
   MarginTop: 0.25
   MarginSide: 0.15
@@ -72,9 +73,27 @@ MonoBehaviour:
   - Lines: []
   - Lines: []
   - Lines: []
+  - Lines:
+    - Org:
+        x: 0.15
+        y: 0.5
+      Dest:
+        x: 0.85
+        y: 0.5
+    - Org:
+        x: 0.5
+        y: 0.25
+      Dest:
+        x: 0.5
+        y: 0.75
   - Lines: []
-  - Lines: []
-  - Lines: []
+  - Lines:
+    - Org:
+        x: 0.15
+        y: 0.5
+      Dest:
+        x: 0.85
+        y: 0.5
   - Lines:
     - Org:
         x: 0.45
