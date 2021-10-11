@@ -1,12 +1,8 @@
 using System;
-using LineBurst.Authoring;
-using Unity.Collections;
 using Unity.Jobs;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
-using Font = LineBurst.Authoring.Font;
 
 namespace LineBurst
 {
@@ -31,7 +27,8 @@ namespace LineBurst
                 throw new Exception("LineBurstRenderer needs to be attached to the camera gameobject to draw in the game view");
 
             Assert.IsTrue(Managed.Instance == null);
-            Managed.Instance = new Managed(MaxLines, LineMaterial, Font.Convert());
+            var font = Font == null ? Resources.Load<Authoring.Font>("LineBurst Default Font") : Font;
+            Managed.Instance = new Managed(MaxLines, LineMaterial, font.Convert());
             RenderPipelineManager.endFrameRendering += (arg1, arg2) => GameViewRender();
         }
 
