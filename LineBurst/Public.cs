@@ -1,6 +1,7 @@
 using LineBurst.Authoring;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -27,6 +28,8 @@ namespace LineBurst
 
     public static class Draw
     {
+        internal static BlobAssetReference<Font> Font;
+
         public struct Arrows
         {
             Lines _lines;
@@ -298,12 +301,9 @@ namespace LineBurst
 
         public static void Transform(float3 pos, quaternion rot, float size = 1) => new Transforms(1).Draw(pos, rot, size);
 
-        public static void Text(FixedString512 text, Matrix4x4 transform, Color color)
-        {
-            Unmanaged.Instance.Data.Font.Draw(text, transform, color);
-        }
-        
-        public static float2 FontSize => Unmanaged.Instance.Data.Font.Size;
+        public static void Text(FixedString512 text, Matrix4x4 transform, Color color) => Font.Value.Draw(text, transform, color);
+
+        public static float2 FontSize => Font.Value.Size;
     }
 
     public struct Line
@@ -325,8 +325,8 @@ namespace LineBurst
         internal const int FinalAscii = 126;
 
         internal float2 Size;
-        internal NativeArray<int2>.ReadOnly Indices;
-        internal NativeArray<Glyph.Line>.ReadOnly Lines;
+        internal BlobArray<int2> Indices;
+        internal BlobArray<Glyph.Line> Lines;
 
         public void Draw(FixedString512 text, Matrix4x4 transform, Color color)
         {

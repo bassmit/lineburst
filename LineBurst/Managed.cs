@@ -1,5 +1,6 @@
 using System;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -20,11 +21,11 @@ namespace LineBurst
         internal static Managed Instance;
         bool _warned;
 
-        internal Managed(int maxLines, Material lineMaterial, Font font)
+        internal Managed(int maxLines, Material lineMaterial)
         {
             if (lineMaterial == null)
                 throw new Exception("Line burst line material not assigned");
-            Unmanaged.Instance.Data.Initialize(maxLines, font);
+            Unmanaged.Instance.Data.Initialize(maxLines);
             _lineMaterial = lineMaterial;
 #if !UNITY_DOTSRUNTIME
             AppDomain.CurrentDomain.DomainUnload += OnDomainUnload;

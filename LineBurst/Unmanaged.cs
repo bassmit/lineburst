@@ -1,4 +1,5 @@
 using Unity.Burst;
+using Unity.Entities;
 using Unity.Mathematics;
 
 namespace LineBurst
@@ -11,12 +12,10 @@ namespace LineBurst
         internal LineBuffer LineBuffer;
         internal bool Initialized;
 
-        internal Font Font;
         // internal UnsafeArray<float4> ColorData;
 
-        internal void Initialize(int maxLines, Font font)
+        internal void Initialize(int maxLines)
         {
-            Font = font;
             if (Initialized == false)
             {
                 LineBuffer = new LineBuffer(maxLines);

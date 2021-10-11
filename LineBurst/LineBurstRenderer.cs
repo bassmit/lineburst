@@ -23,52 +23,18 @@ namespace LineBurst
         bool _clear;
         public Material LineMaterial;
         
-        // todo use default blob or something?
         public Authoring.Font Font;
-        NativeList<Glyph.Line> _lines;
-        NativeList<int2> _indices;
 
         void Awake()
         {
             if (DrawInGameView && GetComponent<Camera>() == null)
                 throw new Exception("LineBurstRenderer needs to be attached to the camera gameobject to draw in the game view");
-            
-            _lines = new NativeList<Glyph.Line>(Allocator.Persistent);
-            _indices = new NativeList<int2>(Allocator.Persistent);
-            var start = 0;
-            
-            foreach (var glyph in Font.Glyphs)
-            {
-                var end = start + glyph.Lines.Length;
-                _indices.Add(new int2(start, end));
-                start = end;
 
-                for (var i = 0; i < glyph.Lines.Length; i++)
-                {
-                    var line = glyph.Lines[i];
-                    line.Org = ToGlyphSpace(line.Org);
-                    line.Dest = ToGlyphSpace(line.Dest);
-                    _lines.Add(line);
-                }
-            }
-
-            var font = new Font
-            {
-                Size = Font.Size,
-                Lines = _lines.AsArray().AsReadOnly(),
-                Indices = _indices.AsArray().AsReadOnly()
-            };
+            Draw.Font = Font.Convert();
 
             Assert.IsTrue(Managed.Instance == null);
-            Managed.Instance = new Managed(MaxLines, LineMaterial, font);
+            Managed.Instance = new Managed(MaxLines, LineMaterial);
             RenderPipelineManager.endFrameRendering += (arg1, arg2) => GameViewRender();
-        }
-
-        float2 ToGlyphSpace(float2 pos)
-        {
-            pos.x = Font.MarginSide * Font.Size.x + pos.x * ((1 - 2 * Font.MarginSide) * Font.Size.x);
-            pos.y = Font.MarginBottom * Font.Size.y + pos.y * ((1 - (Font.MarginBottom + Font.MarginTop)) * Font.Size.y);
-            return pos;
         }
 
         void OnPostRender()
@@ -118,9 +84,6 @@ namespace LineBurst
         {
             Managed.Instance?.Dispose();
             Managed.Instance = null;
-
-            _indices.Dispose();
-            _lines.Dispose();
         }
 
         public static void Render()
