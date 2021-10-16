@@ -329,6 +329,21 @@ namespace LineBurst
 
                 var range = max - min;
                 _tr = float4x4.TRS(new float3(pos, 0), quaternion.identity, new float3(range / _size, 0));
+
+                if (min.y <= 0 && max.y >= 0)
+                {
+                    var o = new float2(min.x, 0);
+                    var d = new float2(max.x, 0);
+                    Line(new float3(o, 0), new float3(d, 0), Color.black);
+                }
+                
+                if (min.x <= 0 && max.x >= 0)
+                {
+                    var o = new float2(0, min.y);
+                    var d = new float2(0, max.y);
+                    Line(new float3(o, 0), new float3(d, 0), Color.black);
+                }
+
             }
 
             public void Plot<T>(T f, int samples) where T : IFunction 

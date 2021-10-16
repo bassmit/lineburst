@@ -18,6 +18,8 @@ class GraphTestSystem : SystemBase
 {
     protected override void OnUpdate()
     {
+        var fix = 1;
+        
         Job
             .WithBurst()
             .WithCode(() =>
@@ -25,7 +27,7 @@ class GraphTestSystem : SystemBase
                 var pos = new float2(0, 0);
                 var size = new float2(1, 1);
                 var graph = new Draw.Graph(pos, size, 0, 1, .1f);
-                graph.Plot(new Func0(), 10);
+                graph.Plot(new Func0(), fix * 10);
             })
             .Schedule();
     }
