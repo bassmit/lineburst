@@ -110,7 +110,7 @@ namespace LineBurst
             if (_graphSettings.GridColor == new Color())
                 _graphSettings.GridColor = new Color32(65, 65, 65, 255);
             if (_graphSettings.GridAltColor == new Color())
-                _graphSettings.GridAltColor = new Color32(65, 65, 65, 255);
+                _graphSettings.GridAltColor = new Color32(29, 29, 29, 255);
             if (_graphSettings.MarkingColor == new Color())
                 _graphSettings.MarkingColor = Color.black;
             if (_graphSettings.MarkingScale <= 0)

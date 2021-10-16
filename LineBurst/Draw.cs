@@ -346,19 +346,22 @@ namespace LineBurst
                 _rot = quaternion.identity;
                 _tr = float4x4.TRS(new float3(pos + -min * _scale, 0), _rot, new float3(_scale, 1));
 
-                DrawGrid(settings.GridColor);
+                DrawGrid(settings.GridColor, settings.GridAltColor);
                 DrawAxes(settings.AxisColor, settings.MarkingColor);
             }
 
-            void DrawGrid(Color color)
+            void DrawGrid(Color color, Color altColor)
             {
                 if (_grid.y > 0)
                 {
                     var y = _min.y - ModEpsilon(_min.y, _grid.y);
                     while (y < _max.y + Epsilon)
                     {
-                        if (math.abs(y) > Epsilon) 
-                            DrawLine(new float2(_min.x, y), new float2(_max.x, y), color);
+                        if (math.abs(y) > Epsilon)
+                        {
+                            var c = _markingInterval.y == 1 || math.abs(ModEpsilon(y, _markingInterval.y * _grid.y)) < Epsilon ? color : altColor;
+                            DrawLine(new float2(_min.x, y), new float2(_max.x, y), c);
+                        }
                         y += _grid.y;
                     }
                 }
@@ -368,8 +371,11 @@ namespace LineBurst
                     var x = _min.x - ModEpsilon(_min.x, _grid.x);
                     while (x < _max.x + Epsilon)
                     {
-                        if (math.abs(x) > Epsilon) 
-                            DrawLine(new float2(x, _min.y), new float2(x, _max.y), color);
+                        if (math.abs(x) > Epsilon)
+                        {
+                            var c = _markingInterval.x == 1 || math.abs(ModEpsilon(x, _markingInterval.x * _grid.x)) < Epsilon ? color : altColor;
+                            DrawLine(new float2(x, _min.y), new float2(x, _max.y), c);
+                        }
                         x += _grid.x;
                     }
                 }
