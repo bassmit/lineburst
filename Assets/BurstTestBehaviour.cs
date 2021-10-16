@@ -5,7 +5,8 @@ class BurstTestBehaviour : MonoBehaviour
 {
     void Start()
     {
-        var em = World.All[0].EntityManager;
-        em.CreateEntity(typeof(BurstTestComponent));
+        var world = World.All[0];
+        var s = world.CreateSystem<BurstTestSystem>();
+        world.GetOrCreateSystem<SimulationSystemGroup>().AddSystemToUpdateList(s);
     }
 }

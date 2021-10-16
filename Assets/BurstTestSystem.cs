@@ -3,14 +3,10 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
+[DisableAutoCreation]
 class BurstTestSystem : SystemBase
 {
     float3 _normal = new float3(0, 1, 0);
-
-    protected override void OnCreate()
-    {
-        RequireSingletonForUpdate<BurstTestComponent>();
-    }
 
     protected override void OnUpdate()
     {
@@ -32,8 +28,4 @@ class BurstTestSystem : SystemBase
             })
             .Schedule();
     }
-}
-
-struct BurstTestComponent : IComponentData
-{
 }
