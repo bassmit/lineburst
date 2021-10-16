@@ -26,14 +26,14 @@ class GraphTestSystem : SystemBase
             {
                 var pos = new float2(0, 0);
                 var size = new float2(1, 1);
-                var graph = new Draw.Graph(pos, size, 0, 1, .1f);
-                graph.Plot(new Func0(), fix * 10);
+                var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1f);
+                graph.Plot(new Func0(), fix * 30, Color.red);
             })
             .Schedule();
     }
 
     struct Func0 : IFunction
     {
-        public float F(float x) => x;
+        public float F(float x) => math.sin(x);
     }
 }

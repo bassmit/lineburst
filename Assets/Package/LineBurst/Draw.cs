@@ -315,6 +315,8 @@ namespace LineBurst
             readonly float2 _max;
             readonly float2 _grid;
             float4x4 _tr;
+            float2 _range;
+            const float Epsilon = 1e-4f;
 
             public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid)
             {
@@ -327,8 +329,8 @@ namespace LineBurst
                 _max = max;
                 _grid = grid;
 
-                var range = max - min;
-                _tr = float4x4.TRS(new float3(pos, 0), quaternion.identity, new float3(range / _size, 0));
+                _range = max - min;
+                _tr = float4x4.TRS(new float3(pos, 0), quaternion.identity, new float3(_range / _size, 0));
 
                 if (min.y <= 0 && max.y >= 0)
                 {
@@ -344,11 +346,45 @@ namespace LineBurst
                     Line(new float3(o, 0), new float3(d, 0), Color.black);
                 }
 
+                var y = min.y - min.y % grid.y;
+                while (y < max.y + Epsilon)
+                {
+                    if (math.abs(y) > Epsilon)
+                    {
+                        var o = new float2(min.x, y);
+                        var d = new float2(max.x, y);
+                        Line(new float3(o, 0), new float3(d, 0), Color.grey);
+                    }
+                    y += grid.y;
+                }
+                
+                var x = min.x - min.x % grid.x;
+                while (x < max.x + Epsilon)
+                {
+                    if (math.abs(x) > Epsilon)
+                    {
+                        var o = new float2(x, min.y);
+                        var d = new float2(x, max.y);
+                        Line(new float3(o, 0), new float3(d, 0), Color.grey);
+                    }
+                    x += grid.x;
+                }
             }
 
-            public void Plot<T>(T f, int samples) where T : IFunction 
+            public void Plot<T>(T f, int samples, Color color) where T : IFunction
             {
-                
+                var step = _range.x / (samples - 1);
+                var x = _min.x;
+                var prev = new float3(x, f.F(x), 0);
+
+                for (int i = 1; i < samples; i++)
+                {
+                    x += step;
+                    var y = f.F(x);
+                    var p = new float3(x, y, 0);
+                    Line(prev, p, color);
+                    prev = p;
+                }
             }
         }
     }
