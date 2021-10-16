@@ -1,4 +1,5 @@
 using Unity.Assertions;
+using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -6,8 +7,6 @@ namespace LineBurst
 {
     public struct GraphSettings
     {
-        public readonly float2 Pos;
-        public readonly float2 Size;
         public readonly float2 Min;
         public readonly float2 Max;
         public readonly float2 Grid;
@@ -22,6 +21,8 @@ namespace LineBurst
         public Color GridAltColor;
         public Color MarkingColor;
         public float MarkingScale;
+        public FixedString64 HorizontalAxisName;
+        public FixedString64 VerticalAxisName;
 
         public GraphSettings(float2 pos, float2 size, float2 min, float2 max, float2 grid)
         {
@@ -29,8 +30,6 @@ namespace LineBurst
             Assert.IsTrue(math.all(grid >= 0));
             Assert.IsTrue(math.all(max > min));
 
-            Pos = pos;
-            Size = size;
             Min = min;
             Max = max;
             Grid = grid;
@@ -45,6 +44,8 @@ namespace LineBurst
             GridAltColor = new Color(.11f, .11f, .11f, 1);
             MarkingColor = Color.white;
             MarkingScale = .4f;
+            HorizontalAxisName = "";
+            VerticalAxisName = "";
         }
     }
 }

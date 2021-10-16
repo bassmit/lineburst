@@ -12,8 +12,6 @@ namespace LineBurst
             readonly GraphSettings _settings;
             const float Epsilon = 1e-4f;
 
-            float2 Pos => _settings.Pos;
-            float2 Size => _settings.Size;
             float2 Min => _settings.Min;
             float2 Max => _settings.Max;
             float2 Grid => _settings.Grid;
@@ -36,6 +34,8 @@ namespace LineBurst
                 _settings = settings;
                 DrawGrid(GridColor, GridAltColor);
                 DrawAxes(AxisColor, MarkingColor);
+                
+                
             }
 
             public void Plot(Func<float, float> f, int samples, Color color) => Plot(new FuncWrapper(f), samples, color);
