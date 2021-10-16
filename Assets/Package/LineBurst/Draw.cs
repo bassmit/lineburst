@@ -314,8 +314,8 @@ namespace LineBurst
             readonly float2 _min;
             readonly float2 _max;
             readonly float2 _grid;
-            float4x4 _tr;
-            float2 _range;
+            readonly float4x4 _tr;
+            readonly float2 _range;
             const float Epsilon = 1e-4f;
 
             public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid)
@@ -330,20 +330,21 @@ namespace LineBurst
                 _grid = grid;
 
                 _range = max - min;
-                _tr = float4x4.TRS(new float3(pos, 0), quaternion.identity, new float3(_range / _size, 0));
+                var scale = _size / _range;
+                _tr = float4x4.TRS(new float3(pos + -min * scale, 0), quaternion.identity, new float3(scale, 0));
 
                 if (min.y <= 0 && max.y >= 0)
                 {
                     var o = new float2(min.x, 0);
                     var d = new float2(max.x, 0);
-                    Line(new float3(o, 0), new float3(d, 0), Color.black);
+                    DrawLine(o, d, Color.black);
                 }
                 
                 if (min.x <= 0 && max.x >= 0)
                 {
                     var o = new float2(0, min.y);
                     var d = new float2(0, max.y);
-                    Line(new float3(o, 0), new float3(d, 0), Color.black);
+                    DrawLine(o, d, Color.black);
                 }
 
                 var y = min.y - min.y % grid.y;
@@ -353,7 +354,7 @@ namespace LineBurst
                     {
                         var o = new float2(min.x, y);
                         var d = new float2(max.x, y);
-                        Line(new float3(o, 0), new float3(d, 0), Color.grey);
+                        DrawLine(o, d, Color.grey);
                     }
                     y += grid.y;
                 }
@@ -365,24 +366,29 @@ namespace LineBurst
                     {
                         var o = new float2(x, min.y);
                         var d = new float2(x, max.y);
-                        Line(new float3(o, 0), new float3(d, 0), Color.grey);
+                        DrawLine(o, d, Color.grey);
                     }
                     x += grid.x;
                 }
+            }
+
+            void DrawLine(float2 o, float2 d, Color color)
+            {
+                Line(math.transform(_tr, new float3(o, 0)), math.transform(_tr, new float3(d, 0)), color);
             }
 
             public void Plot<T>(T f, int samples, Color color) where T : IFunction
             {
                 var step = _range.x / (samples - 1);
                 var x = _min.x;
-                var prev = new float3(x, f.F(x), 0);
+                var prev = new float2(x, f.F(x));
 
                 for (int i = 1; i < samples; i++)
                 {
                     x += step;
                     var y = f.F(x);
-                    var p = new float3(x, y, 0);
-                    Line(prev, p, color);
+                    var p = new float2(x, y);
+                    DrawLine(prev, p, color);
                     prev = p;
                 }
             }

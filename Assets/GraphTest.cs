@@ -24,10 +24,17 @@ class GraphTestSystem : SystemBase
             .WithBurst()
             .WithCode(() =>
             {
-                var pos = new float2(0, 0);
                 var size = new float2(1, 1);
+                const float border = .2f;
+                
+                var pos = new float2(0, 0);
                 var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1f);
                 graph.Plot(new Func0(), fix * 30, Color.red);
+
+                pos.x += size.x + border;
+                graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1f);
+                graph.Plot(new Func0(), fix * 30, Color.red);
+
             })
             .Schedule();
     }
