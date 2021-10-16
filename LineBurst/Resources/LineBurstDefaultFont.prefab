@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Width: 0.4
-  TotalLines: 142
+  TotalLines: 141
   MarginBottom: 0.25
   MarginTop: 0.25
   MarginSide: 0.15
@@ -137,12 +137,6 @@ MonoBehaviour:
       Dest:
         x: 0
         y: 0
-    - Org:
-        x: 0.5
-        y: 0.3
-      Dest:
-        x: 0.5
-        y: 0.7
   - Lines:
     - Org:
         x: 0.5

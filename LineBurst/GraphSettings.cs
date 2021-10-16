@@ -1,4 +1,3 @@
-using System;
 using Unity.Assertions;
 using Unity.Mathematics;
 using UnityEngine;
@@ -18,7 +17,11 @@ namespace LineBurst
         public readonly float4x4 Tr;
 
         public int2 MarkingInterval;
-        public GraphVisualSettings Settings;
+        public Color AxisColor;
+        public Color GridColor;
+        public Color GridAltColor;
+        public Color MarkingColor;
+        public float MarkingScale;
 
         public GraphSettings(float2 pos, float2 size, float2 min, float2 max, float2 grid)
         {
@@ -37,17 +40,11 @@ namespace LineBurst
             Tr = float4x4.TRS(new float3(pos + -min * Scale, 0), Rot, new float3(Scale, 1));
 
             MarkingInterval = new int2(1);
-            Settings = Draw.DefaulGraphSettings;
+            AxisColor = Color.black;
+            GridColor = new Color(.25f, .25f, .25f, 1);
+            GridAltColor = new Color(.11f, .11f, .11f, 1);
+            MarkingColor = Color.white;
+            MarkingScale = .4f;
         }
-    }
-    
-    [Serializable]
-    public struct GraphVisualSettings
-    {
-        public Color AxisColor;
-        public Color GridColor;
-        public Color GridAltColor;
-        public Color MarkingColor;
-        public float MarkingScale;
     }
 }

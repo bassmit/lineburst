@@ -22,11 +22,12 @@ namespace LineBurst
             quaternion Rot => _settings.Rot;
             float4x4 Tr => _settings.Tr;
 
+            float MarkingScale => _settings.MarkingScale;
             int2 MarkingInterval => _settings.MarkingInterval;
-            Color GridColor => _settings.Settings.GridColor;
-            Color GridAltColor => _settings.Settings.GridAltColor;
-            Color AxisColor => _settings.Settings.AxisColor;
-            Color MarkingColor => _settings.Settings.MarkingColor;
+            Color GridColor => _settings.GridColor;
+            Color GridAltColor => _settings.GridAltColor;
+            Color AxisColor => _settings.AxisColor;
+            Color MarkingColor => _settings.MarkingColor;
 
             public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid) : this(new GraphSettings(pos, size, min, max, grid)) { }
 
@@ -122,7 +123,7 @@ namespace LineBurst
                 }
             }
 
-            float TextScale => DefaulGraphSettings.MarkingScale * (Grid.x < Grid.y
+            float TextScale => MarkingScale * (Grid.x < Grid.y
                 ? (MarkingInterval.x > 1 ? 1.4f : 1) * Grid.x * Scale.y
                 : (MarkingInterval.y > 1 ? 1.4f : 1) * Grid.y * Scale.x);
 
