@@ -4,10 +4,10 @@
 </p>
 
 ## Introduction
-Draw large amounts of debug lines, shapes and text to the Unity Game and Scene View, from BURST compiled jobs or MonoBehaviours. The default font misses lower case letters and many signs. The contents of this package are largely taken from the Unity Physics package.
+Draw large amounts of debug lines, shapes and text to the Unity Game and Scene View, from BURST compiled jobs or MonoBehaviours. The default font misses lower case letters and many signs, a basic editor is provided in the scene view when a font is selected, pull requests are welcome ; ) The Unity Physics package forms the basis of this package.
 
 ## Installation
-To have a quick look at LineBurst clone or download the master branch which contains a full Unity 2020.3 LTS project.
+The master branch contains a full Unity 2020.3 LTS project.
 
 The recommended way of installing LineBurst is through the [OpenUPM](https://openupm.com/packages/com.bassmit.lineburst/) package installer (top right). Download and add the unitypackage to a project to install LineBurst, including setting up the scoped registry required.
 
