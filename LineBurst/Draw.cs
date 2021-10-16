@@ -333,42 +333,59 @@ namespace LineBurst
                 var scale = _size / _range;
                 _tr = float4x4.TRS(new float3(pos + -min * scale, 0), quaternion.identity, new float3(scale, 0));
 
+                DrawGrid(min, max, grid);
+                DrawAxes(min, max);
+            }
+
+            void DrawGrid(float2 min, float2 max, float2 grid)
+            {
+                if (grid.y > 0)
+                {
+                    var y = min.y - min.y % grid.y;
+                    while (y < max.y + Epsilon)
+                    {
+                        if (math.abs(y) > Epsilon)
+                        {
+                            var o = new float2(min.x, y);
+                            var d = new float2(max.x, y);
+                            DrawLine(o, d, Color.grey);
+                        }
+
+                        y += grid.y;
+                    }
+                }
+
+                if (grid.x > 0)
+                {
+                    var x = min.x - min.x % grid.x;
+                    while (x < max.x + Epsilon)
+                    {
+                        if (math.abs(x) > Epsilon)
+                        {
+                            var o = new float2(x, min.y);
+                            var d = new float2(x, max.y);
+                            DrawLine(o, d, Color.grey);
+                        }
+
+                        x += grid.x;
+                    }
+                }
+            }
+
+            void DrawAxes(float2 min, float2 max)
+            {
                 if (min.y <= 0 && max.y >= 0)
                 {
                     var o = new float2(min.x, 0);
                     var d = new float2(max.x, 0);
                     DrawLine(o, d, Color.black);
                 }
-                
+
                 if (min.x <= 0 && max.x >= 0)
                 {
                     var o = new float2(0, min.y);
                     var d = new float2(0, max.y);
                     DrawLine(o, d, Color.black);
-                }
-
-                var y = min.y - min.y % grid.y;
-                while (y < max.y + Epsilon)
-                {
-                    if (math.abs(y) > Epsilon)
-                    {
-                        var o = new float2(min.x, y);
-                        var d = new float2(max.x, y);
-                        DrawLine(o, d, Color.grey);
-                    }
-                    y += grid.y;
-                }
-                
-                var x = min.x - min.x % grid.x;
-                while (x < max.x + Epsilon)
-                {
-                    if (math.abs(x) > Epsilon)
-                    {
-                        var o = new float2(x, min.y);
-                        var d = new float2(x, max.y);
-                        DrawLine(o, d, Color.grey);
-                    }
-                    x += grid.x;
                 }
             }
 
