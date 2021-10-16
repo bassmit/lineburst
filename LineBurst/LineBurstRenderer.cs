@@ -24,7 +24,7 @@ namespace LineBurst
         public Authoring.Font Font;
 
         [SerializeField]
-        GraphSettings _graphSettings;
+        GraphVisualSettings _graphSettings;
         
         void Awake()
         {
@@ -122,15 +122,5 @@ namespace LineBurst
             Draw.DefaulGraphSettings = _graphSettings;
         }
 #endif
-    }
-
-    [Serializable]
-    public struct GraphSettings
-    {
-        public Color AxisColor;
-        public Color GridColor;
-        public Color GridAltColor;
-        public Color MarkingColor;
-        public float MarkingScale;
     }
 }

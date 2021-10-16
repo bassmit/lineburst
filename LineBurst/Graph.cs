@@ -1,5 +1,4 @@
 using System;
-using Unity.Assertions;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -10,47 +9,40 @@ namespace LineBurst
     {
         public struct Graph
         {
-            readonly float2 _min;
-            readonly float2 _max;
-            readonly float2 _grid;
-            readonly int2 _markingInterval;
-            readonly float2 _range;
-            readonly float4x4 _tr;
-            readonly float2 _scale;
-            readonly quaternion _rot;
+            readonly GraphSettings _settings;
             const float Epsilon = 1e-4f;
 
-            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid)
-                : this(pos, size, min, max, grid, 1, DefaulGraphSettings) { }
+            float2 Pos => _settings.Pos;
+            float2 Size => _settings.Size;
+            float2 Min => _settings.Min;
+            float2 Max => _settings.Max;
+            float2 Grid => _settings.Grid;
+            float2 Range => _settings.Range;
+            float2 Scale => _settings.Scale;
+            quaternion Rot => _settings.Rot;
+            float4x4 Tr => _settings.Tr;
 
-            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid, int2 markingInterval)
-                : this(pos, size, min, max, grid, markingInterval, DefaulGraphSettings) { }
+            int2 MarkingInterval => _settings.MarkingInterval;
+            Color GridColor => _settings.Settings.GridColor;
+            Color GridAltColor => _settings.Settings.GridAltColor;
+            Color AxisColor => _settings.Settings.AxisColor;
+            Color MarkingColor => _settings.Settings.MarkingColor;
 
-            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid, int2 markingInterval, GraphSettings settings)
+            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid) : this(new GraphSettings(pos, size, min, max, grid)) { }
+
+            public Graph(GraphSettings settings)
             {
-                Assert.IsTrue(math.all(size > 0));
-                Assert.IsTrue(math.all(grid >= 0));
-                Assert.IsTrue(math.all(max > min));
-
-                _min = min;
-                _max = max;
-                _grid = grid;
-                _markingInterval = markingInterval;
-                _range = max - min;
-                _scale = size / _range;
-                _rot = quaternion.identity;
-                _tr = float4x4.TRS(new float3(pos + -min * _scale, 0), _rot, new float3(_scale, 1));
-
-                DrawGrid(settings.GridColor, settings.GridAltColor);
-                DrawAxes(settings.AxisColor, settings.MarkingColor);
+                _settings = settings;
+                DrawGrid(GridColor, GridAltColor);
+                DrawAxes(AxisColor, MarkingColor);
             }
 
             public void Plot(Func<float, float> f, int samples, Color color) => Plot(new FuncWrapper(f), samples, color);
 
             public void Plot<T>(T f, int samples, Color color) where T : IFunction
             {
-                var step = _range.x / (samples - 1);
-                var x = _min.x;
+                var step = Range.x / (samples - 1);
+                var x = Min.x;
                 var prev = new float2(x, f.F(x));
 
                 for (int i = 1; i < samples; i++)
@@ -64,47 +56,47 @@ namespace LineBurst
 
             void DrawGrid(Color color, Color altColor)
             {
-                if (_grid.y > 0)
+                if (Grid.y > 0)
                 {
-                    var y = _min.y - ModEpsilon(_min.y, _grid.y);
-                    while (y < _max.y + Epsilon)
+                    var y = Min.y - ModEpsilon(Min.y, Grid.y);
+                    while (y < Max.y + Epsilon)
                     {
                         if (math.abs(y) > Epsilon)
                         {
-                            var c = _markingInterval.y == 1 || math.abs(ModEpsilon(y, _markingInterval.y * _grid.y)) < Epsilon ? color : altColor;
-                            DrawLine(new float2(_min.x, y), new float2(_max.x, y), c);
+                            var c = MarkingInterval.y == 1 || math.abs(ModEpsilon(y, MarkingInterval.y * Grid.y)) < Epsilon ? color : altColor;
+                            DrawLine(new float2(Min.x, y), new float2(Max.x, y), c);
                         }
 
-                        y += _grid.y;
+                        y += Grid.y;
                     }
                 }
 
-                if (_grid.x > 0)
+                if (Grid.x > 0)
                 {
-                    var x = _min.x - ModEpsilon(_min.x, _grid.x);
-                    while (x < _max.x + Epsilon)
+                    var x = Min.x - ModEpsilon(Min.x, Grid.x);
+                    while (x < Max.x + Epsilon)
                     {
                         if (math.abs(x) > Epsilon)
                         {
-                            var c = _markingInterval.x == 1 || math.abs(ModEpsilon(x, _markingInterval.x * _grid.x)) < Epsilon ? color : altColor;
-                            DrawLine(new float2(x, _min.y), new float2(x, _max.y), c);
+                            var c = MarkingInterval.x == 1 || math.abs(ModEpsilon(x, MarkingInterval.x * Grid.x)) < Epsilon ? color : altColor;
+                            DrawLine(new float2(x, Min.y), new float2(x, Max.y), c);
                         }
 
-                        x += _grid.x;
+                        x += Grid.x;
                     }
                 }
             }
 
             void DrawMarkingsX(float y, Color color)
             {
-                var step = _grid.x * _markingInterval.x;
-                var x = _min.x - ModEpsilon(_min.x, step);
-                while (x < _max.x + Epsilon)
+                var step = Grid.x * MarkingInterval.x;
+                var x = Min.x - ModEpsilon(Min.x, step);
+                while (x < Max.x + Epsilon)
                 {
                     FixedString512 s = $"{System.Math.Round(x, 3)}";
                     var l = math.abs(x) < Epsilon ? s.Length + 1.4f : s.Length;
-                    var pos = math.transform(_tr, new float3(x, y, 0));
-                    var tr = float4x4.TRS(pos, _rot, new float3(TextScale, TextScale, 1));
+                    var pos = math.transform(Tr, new float3(x, y, 0));
+                    var tr = float4x4.TRS(pos, Rot, new float3(TextScale, TextScale, 1));
                     tr = math.mul(tr, float4x4.Translate(new float3(-l * FontWidth / 2, 0, 0)));
                     Text(s, tr, color);
                     x += step;
@@ -113,15 +105,15 @@ namespace LineBurst
 
             void DrawMarkingsY(float x, Color color)
             {
-                var step = _grid.y * _markingInterval.y;
-                var y = _min.y - ModEpsilon(_min.y, step);
-                while (y < _max.y + Epsilon)
+                var step = Grid.y * MarkingInterval.y;
+                var y = Min.y - ModEpsilon(Min.y, step);
+                while (y < Max.y + Epsilon)
                 {
                     if (math.abs(y) > Epsilon)
                     {
                         FixedString512 s = $"{System.Math.Round(y, 3)}";
-                        var pos = math.transform(_tr, new float3(x, y, 0));
-                        var tr = float4x4.TRS(pos, _rot, new float3(TextScale, TextScale, 1));
+                        var pos = math.transform(Tr, new float3(x, y, 0));
+                        var tr = float4x4.TRS(pos, Rot, new float3(TextScale, TextScale, 1));
                         tr = math.mul(tr, float4x4.Translate(new float3(-(s.Length + .2f) * FontWidth, .5f, 0)));
                         Text(s, tr, color);
                     }
@@ -130,9 +122,9 @@ namespace LineBurst
                 }
             }
 
-            float TextScale => DefaulGraphSettings.MarkingScale * (_grid.x < _grid.y
-                ? (_markingInterval.x > 1 ? 1.4f : 1) * _grid.x * _scale.y
-                : (_markingInterval.y > 1 ? 1.4f : 1) * _grid.y * _scale.x);
+            float TextScale => DefaulGraphSettings.MarkingScale * (Grid.x < Grid.y
+                ? (MarkingInterval.x > 1 ? 1.4f : 1) * Grid.x * Scale.y
+                : (MarkingInterval.y > 1 ? 1.4f : 1) * Grid.y * Scale.x);
 
             static float ModEpsilon(float a, float b)
             {
@@ -145,33 +137,33 @@ namespace LineBurst
 
             void DrawAxes(Color color, Color markingColor)
             {
-                if (_min.y <= 0 && _max.y >= 0)
+                if (Min.y <= 0 && Max.y >= 0)
                 {
-                    DrawLine(new float2(_min.x, 0), new float2(_max.x, 0), color);
+                    DrawLine(new float2(Min.x, 0), new float2(Max.x, 0), color);
                     DrawMarkingsX(0, markingColor);
                 }
                 else
                 {
-                    DrawMarkingsX(_min.y, markingColor);
+                    DrawMarkingsX(Min.y, markingColor);
                 }
 
-                if (_min.x <= 0 && _max.x >= 0)
+                if (Min.x <= 0 && Max.x >= 0)
                 {
-                    DrawLine(new float2(0, _min.y), new float2(0, _max.y), color);
+                    DrawLine(new float2(0, Min.y), new float2(0, Max.y), color);
                     DrawMarkingsY(0, markingColor);
                 }
                 else
                 {
-                    DrawMarkingsY(_min.x, markingColor);
+                    DrawMarkingsY(Min.x, markingColor);
                 }
             }
 
-            void DrawLine(float2 o, float2 d, Color color) => Line(math.transform(_tr, new float3(o, 0)), math.transform(_tr, new float3(d, 0)), color);
+            void DrawLine(float2 o, float2 d, Color color) => Line(math.transform(Tr, new float3(o, 0)), math.transform(Tr, new float3(d, 0)), color);
 
             void DrawClamped<T>(float2 o, float2 d, Color color) where T : IFunction
             {
-                var min = _min.y;
-                var max = _max.y;
+                var min = Min.y;
+                var max = Max.y;
 
                 if (o.y < min)
                 {

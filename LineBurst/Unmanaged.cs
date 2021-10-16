@@ -14,11 +14,11 @@ namespace LineBurst
         internal UnsafeArray<float4> LineBuffer;
 
         internal BlobAssetReference<Font> Font;
-        internal GraphSettings GraphSettings;
+        internal GraphVisualSettings GraphSettings;
       
         // internal UnsafeArray<float4> ColorData;
 
-        internal void Initialize(int maxLines, BlobAssetReference<Font> font, GraphSettings graphSettings)
+        internal void Initialize(int maxLines, BlobAssetReference<Font> font, GraphVisualSettings graphSettings)
         {
             GraphSettings = graphSettings;
             Font = font;
