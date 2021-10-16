@@ -1,3 +1,4 @@
+using System;
 using Unity.Assertions;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -462,6 +463,20 @@ namespace LineBurst
             }
 
             void DrawLine(float2 o, float2 d, Color color) => Line(math.transform(_tr, new float3(o, 0)), math.transform(_tr, new float3(d, 0)), color);
+
+            public void Plot(Func<float, float> f, int samples, Color color) => Plot(new FuncWrapper(f), samples, color);
+
+            struct FuncWrapper : IFunction
+            {
+                readonly Func<float, float> _func;
+
+                public FuncWrapper(Func<float, float> func)
+                {
+                    _func = func;
+                }
+                
+                public float F(float x) => _func(x);
+            }
 
             public void Plot<T>(T f, int samples, Color color) where T : IFunction
             {
