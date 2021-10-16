@@ -33,7 +33,8 @@ class GraphTestSystem : SystemBase
                 graph.Plot(new Func1(), 30, Color.blue);
 
                 pos.x += size.x + border;
-                graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1f);
+                var t = new float2(math.PI, 1);
+                graph = new Draw.Graph(pos, size * 2, -t, math.PI, 1f/3,2);
                 graph.Plot(new Func0(), 30, Color.red);
 
             })

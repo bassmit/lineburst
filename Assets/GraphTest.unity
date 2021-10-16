@@ -486,7 +486,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.31910825, g: 0.5585625, b: 0.9528302, a: 0}
+  m_BackGroundColor: {r: 0.2784314, g: 0.2784314, b: 0.2784314, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -551,5 +551,8 @@ MonoBehaviour:
   LineMaterial: {fileID: 2100000, guid: 79cf78c8762f66c4281f6fda01e695b0, type: 2}
   Font: {fileID: 1816785126561671821, guid: bcb2c00c2d585c9448fe3cc2cc1558ee, type: 3}
   _graphSettings:
-    AxisDefault: {r: 0, g: 0, b: 0, a: 1}
-    GridDefault: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 1}
+    AxisColor: {r: 0, g: 0, b: 0, a: 1}
+    GridColor: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 1}
+    GridAltColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
+    MarkingColor: {r: 1, g: 1, b: 1, a: 1}
+    MarkingScale: 0.3
