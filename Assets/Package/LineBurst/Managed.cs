@@ -21,7 +21,7 @@ namespace LineBurst
         internal static Managed Instance;
         bool _warned;
 
-        internal Managed(int maxLines, Material lineMaterial, BlobAssetReference<Font> font, GraphSettings graphSettings)
+        internal Managed(int maxLines, Material lineMaterial, BlobAssetReference<Font> font, GraphVisualSettings graphSettings)
         {
             if (lineMaterial == null)
                 throw new Exception("Line burst line material not assigned");

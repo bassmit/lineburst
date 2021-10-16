@@ -28,13 +28,16 @@ class GraphTestSystem : SystemBase
                 const float border = .2f;
                 
                 var pos = new float2(0, 0);
-                var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1f);
+                var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1);
                 graph.Plot(new Func0(), 30, Color.red);
                 graph.Plot(new Func1(), 30, Color.blue);
 
                 pos.x += size.x + border;
-                var t = new float2(math.PI, .5f);
-                graph = new Draw.Graph(pos, size * 2, -t, math.PI, 1f/3,2);
+                var s = new GraphSettings(pos, size * 2, -new float2(math.PI, .5f), math.PI, 1f / 3)
+                {
+                    MarkingInterval = 2
+                };
+                graph = new Draw.Graph(s);
                 graph.Plot(new Func0(), 30, Color.red);
 
             })
