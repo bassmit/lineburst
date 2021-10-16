@@ -9,7 +9,8 @@ namespace LineBurst.Authoring
     public class Font : MonoBehaviour
     {
         const int GlyphAmount = LineBurst.Font.FinalAscii - LineBurst.Font.FirstAscii + 1;
-        public float2 Size;
+        public float Width;
+        [HideInInspector]
         public int TotalLines;
         public float MarginBottom = .25f;
         public float MarginTop = .75f;
@@ -18,10 +19,8 @@ namespace LineBurst.Authoring
 
         void OnValidate()
         {
-            if (Size.x <= 0)
-                Size.x = .1f;
-            if (Size.y <= 0)
-                Size.y = .1f;
+            if (Width <= 0)
+                Width = .1f;
 
             MarginBottom = math.clamp(MarginBottom, 0, .5f);
             MarginTop = math.clamp(MarginTop, 0, .5f);
@@ -43,7 +42,7 @@ namespace LineBurst.Authoring
             using (var blobBuilder = new BlobBuilder(Allocator.Temp))
             {
                 ref var a = ref blobBuilder.ConstructRoot<LineBurst.Font>();
-                a.Size = Size;
+                a.Width = Width;
                 var ind = blobBuilder.Allocate(ref a.Indices, Glyphs.Length);
                 var l = blobBuilder.Allocate(ref a.Lines, TotalLines);
 
@@ -72,8 +71,8 @@ namespace LineBurst.Authoring
 
         float2 ToGlyphSpace(float2 pos)
         {
-            pos.x = MarginSide * Size.x + pos.x * ((1 - 2 * MarginSide) * Size.x);
-            pos.y = MarginBottom * Size.y + pos.y * ((1 - (MarginBottom + MarginTop)) * Size.y) - Size.y;
+            pos.x = MarginSide * Width + pos.x * ((1 - 2 * MarginSide) * Width);
+            pos.y = MarginBottom + pos.y * (1 - (MarginBottom + MarginTop)) - 1;
             return pos;
         }
     }
