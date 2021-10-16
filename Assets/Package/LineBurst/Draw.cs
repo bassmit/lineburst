@@ -285,12 +285,6 @@ namespace LineBurst
         
         public static float FontWidth => Unmanaged.Instance.Data.Font.Value.Width;
         
-        internal static GraphVisualSettings DefaulGraphSettings
-        {
-            get => Unmanaged.Instance.Data.GraphSettings;
-            set => Unmanaged.Instance.Data.GraphSettings = value;
-        }
-        
         // struct Color
         // {
         //     public static ColorIndex Quantize(float4 rgba)

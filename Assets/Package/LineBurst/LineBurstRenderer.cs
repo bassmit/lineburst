@@ -22,9 +22,6 @@ namespace LineBurst
         public Material LineMaterial;
         
         public Authoring.Font Font;
-
-        [SerializeField]
-        GraphVisualSettings _graphSettings;
         
         void Awake()
         {
@@ -32,7 +29,7 @@ namespace LineBurst
                 throw new Exception("LineBurstRenderer needs to be attached to the camera gameobject to draw in the game view");
 
             Assert.IsTrue(Managed.Instance == null);
-            Managed.Instance = new Managed(MaxLines, LineMaterial, Font.Convert(), _graphSettings);
+            Managed.Instance = new Managed(MaxLines, LineMaterial, Font.Convert());
             RenderPipelineManager.endFrameRendering += (arg1, arg2) => GameViewRender();
         }
 
@@ -105,21 +102,6 @@ namespace LineBurst
                 LineMaterial = Resources.Load<Material>("LineBurstLineMaterial");
             if (Font == null)
                 Font = Resources.Load<Authoring.Font>("LineBurstDefaultFont");
-            if (_graphSettings.AxisColor == new Color())
-                _graphSettings.AxisColor = Color.black;
-            if (_graphSettings.GridColor == new Color())
-                _graphSettings.GridColor = new Color32(65, 65, 65, 255);
-            if (_graphSettings.GridAltColor == new Color())
-                _graphSettings.GridAltColor = new Color32(29, 29, 29, 255);
-            if (_graphSettings.MarkingColor == new Color())
-                _graphSettings.MarkingColor = Color.black;
-            if (_graphSettings.MarkingScale <= 0)
-                _graphSettings.MarkingScale = .3f;
-        }
-
-        void Update()
-        {
-            Draw.DefaulGraphSettings = _graphSettings;
         }
 #endif
     }

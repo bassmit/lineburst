@@ -360,9 +360,3 @@ MonoBehaviour:
   AutoClear: 1
   LineMaterial: {fileID: 2100000, guid: 79cf78c8762f66c4281f6fda01e695b0, type: 2}
   Font: {fileID: 1816785126561671821, guid: bcb2c00c2d585c9448fe3cc2cc1558ee, type: 3}
-  _graphSettings:
-    AxisColor: {r: 0, g: 0, b: 0, a: 1}
-    GridColor: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 1}
-    GridAltColor: {r: 0.11372549, g: 0.11372549, b: 0.11372549, a: 1}
-    MarkingColor: {r: 1, g: 1, b: 1, a: 1}
-    MarkingScale: 0.3
