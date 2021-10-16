@@ -307,50 +307,48 @@ namespace LineBurst
         }
         
         public static float FontWidth => Unmanaged.Instance.Data.Font.Value.Width;
+        internal static GraphSettings GraphSettings
+        {
+            get => Unmanaged.Instance.Data.GraphSettings;
+            set => Unmanaged.Instance.Data.GraphSettings = value;
+        }
 
         public struct Graph
         {
-            readonly float2 _size;
             readonly float2 _min;
-            readonly float2 _max;
-            readonly float2 _grid;
             readonly float4x4 _tr;
             readonly float2 _range;
             const float Epsilon = 1e-4f;
 
-            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid)
+            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid) 
+                : this(pos, size, min, max, grid, GraphSettings.AxisDefault, GraphSettings.GridDefault) { }
+            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid, Color axisColor)
+                : this(pos, size, min, max, grid, axisColor, GraphSettings.GridDefault) { }
+                
+            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid, Color axisColor, Color gridColor)
             {
                 Assert.IsTrue(math.all(size > 0));
                 Assert.IsTrue(math.all(grid >= 0));
                 Assert.IsTrue(math.all(max > min));
-                
-                _size = size;
-                _min = min;
-                _max = max;
-                _grid = grid;
 
+                _min = min;
                 _range = max - min;
-                var scale = _size / _range;
+                var scale = size / _range;
                 _tr = float4x4.TRS(new float3(pos + -min * scale, 0), quaternion.identity, new float3(scale, 0));
 
-                DrawGrid(min, max, grid);
-                DrawAxes(min, max);
+                DrawGrid(min, max, grid, gridColor);
+                DrawAxes(min, max, axisColor);
             }
 
-            void DrawGrid(float2 min, float2 max, float2 grid)
+            void DrawGrid(float2 min, float2 max, float2 grid, Color color)
             {
                 if (grid.y > 0)
                 {
                     var y = min.y - min.y % grid.y;
                     while (y < max.y + Epsilon)
                     {
-                        if (math.abs(y) > Epsilon)
-                        {
-                            var o = new float2(min.x, y);
-                            var d = new float2(max.x, y);
-                            DrawLine(o, d, Color.grey);
-                        }
-
+                        if (math.abs(y) > Epsilon) 
+                            DrawLine(new float2(min.x, y), new float2(max.x, y), color);
                         y += grid.y;
                     }
                 }
@@ -360,39 +358,22 @@ namespace LineBurst
                     var x = min.x - min.x % grid.x;
                     while (x < max.x + Epsilon)
                     {
-                        if (math.abs(x) > Epsilon)
-                        {
-                            var o = new float2(x, min.y);
-                            var d = new float2(x, max.y);
-                            DrawLine(o, d, Color.grey);
-                        }
-
+                        if (math.abs(x) > Epsilon) 
+                            DrawLine(new float2(x, min.y), new float2(x, max.y), color);
                         x += grid.x;
                     }
                 }
             }
 
-            void DrawAxes(float2 min, float2 max)
+            void DrawAxes(float2 min, float2 max, Color color)
             {
-                if (min.y <= 0 && max.y >= 0)
-                {
-                    var o = new float2(min.x, 0);
-                    var d = new float2(max.x, 0);
-                    DrawLine(o, d, Color.black);
-                }
-
-                if (min.x <= 0 && max.x >= 0)
-                {
-                    var o = new float2(0, min.y);
-                    var d = new float2(0, max.y);
-                    DrawLine(o, d, Color.black);
-                }
+                if (min.y <= 0 && max.y >= 0) 
+                    DrawLine(new float2(min.x, 0), new float2(max.x, 0), color);
+                if (min.x <= 0 && max.x >= 0) 
+                    DrawLine(new float2(0, min.y), new float2(0, max.y), color);
             }
 
-            void DrawLine(float2 o, float2 d, Color color)
-            {
-                Line(math.transform(_tr, new float3(o, 0)), math.transform(_tr, new float3(d, 0)), color);
-            }
+            void DrawLine(float2 o, float2 d, Color color) => Line(math.transform(_tr, new float3(o, 0)), math.transform(_tr, new float3(d, 0)), color);
 
             public void Plot<T>(T f, int samples, Color color) where T : IFunction
             {

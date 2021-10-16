@@ -21,11 +21,11 @@ namespace LineBurst
         internal static Managed Instance;
         bool _warned;
 
-        internal Managed(int maxLines, Material lineMaterial, BlobAssetReference<Font> font)
+        internal Managed(int maxLines, Material lineMaterial, BlobAssetReference<Font> font, GraphSettings graphSettings)
         {
             if (lineMaterial == null)
                 throw new Exception("Line burst line material not assigned");
-            Unmanaged.Instance.Data.Initialize(maxLines, font);
+            Unmanaged.Instance.Data.Initialize(maxLines, font, graphSettings);
             _lineMaterial = lineMaterial;
 #if !UNITY_DOTSRUNTIME
             AppDomain.CurrentDomain.DomainUnload += OnDomainUnload;

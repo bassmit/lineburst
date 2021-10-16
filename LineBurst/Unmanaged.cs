@@ -9,16 +9,18 @@ namespace LineBurst
     {
         internal static readonly SharedStatic<Unmanaged> Instance = SharedStatic<Unmanaged>.GetOrCreate<Unmanaged>();
 
+        internal bool Initialized;
         internal Unit LineBufferAllocations;
         internal UnsafeArray<float4> LineBuffer;
 
-        internal bool Initialized;
-
         internal BlobAssetReference<Font> Font;
+        internal GraphSettings GraphSettings;
+      
         // internal UnsafeArray<float4> ColorData;
 
-        internal void Initialize(int maxLines, BlobAssetReference<Font> font)
+        internal void Initialize(int maxLines, BlobAssetReference<Font> font, GraphSettings graphSettings)
         {
+            GraphSettings = graphSettings;
             Font = font;
             if (Initialized == false)
             {
