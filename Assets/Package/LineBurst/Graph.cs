@@ -45,6 +45,23 @@ namespace LineBurst
                 DrawAxes(settings.AxisColor, settings.MarkingColor);
             }
 
+            public void Plot(Func<float, float> f, int samples, Color color) => Plot(new FuncWrapper(f), samples, color);
+
+            public void Plot<T>(T f, int samples, Color color) where T : IFunction
+            {
+                var step = _range.x / (samples - 1);
+                var x = _min.x;
+                var prev = new float2(x, f.F(x));
+
+                for (int i = 1; i < samples; i++)
+                {
+                    x += step;
+                    var p = new float2(x, f.F(x));
+                    DrawClamped<T>(prev, p, color);
+                    prev = p;
+                }
+            }
+
             void DrawGrid(Color color, Color altColor)
             {
                 if (_grid.y > 0)
@@ -113,17 +130,9 @@ namespace LineBurst
                 }
             }
 
-            float TextScale
-            {
-                get
-                {
-                    var f = _grid.x < _grid.y
-                        ? (_markingInterval.x > 1 ? 1.4f : 1) * _grid.x * _scale.y
-                        : (_markingInterval.y > 1 ? 1.4f : 1) * _grid.y * _scale.x;
-
-                    return DefaulGraphSettings.MarkingScale * f;
-                }
-            }
+            float TextScale => DefaulGraphSettings.MarkingScale * (_grid.x < _grid.y
+                ? (_markingInterval.x > 1 ? 1.4f : 1) * _grid.x * _scale.y
+                : (_markingInterval.y > 1 ? 1.4f : 1) * _grid.y * _scale.x);
 
             static float ModEpsilon(float a, float b)
             {
@@ -131,9 +140,7 @@ namespace LineBurst
                 var s = math.sign(a);
                 while (t + Epsilon > b)
                     t -= b;
-                if (t <= 0)
-                    return 0;
-                return s * t;
+                return t <= 0 ? 0 : s * t;
             }
 
             void DrawAxes(Color color, Color markingColor)
@@ -161,7 +168,55 @@ namespace LineBurst
 
             void DrawLine(float2 o, float2 d, Color color) => Line(math.transform(_tr, new float3(o, 0)), math.transform(_tr, new float3(d, 0)), color);
 
-            public void Plot(Func<float, float> f, int samples, Color color) => Plot(new FuncWrapper(f), samples, color);
+            void DrawClamped<T>(float2 o, float2 d, Color color) where T : IFunction
+            {
+                var min = _min.y;
+                var max = _max.y;
+
+                if (o.y < min)
+                {
+                    if (d.y > min)
+                    {
+                        o = Intercept(o, d, min);
+
+                        if (d.y > max)
+                            d = Intercept(o, d, max);
+
+                        DrawLine(o, d, color);
+                    }
+                }
+                else if (o.y > max)
+                {
+                    if (d.y < max)
+                    {
+                        o = Intercept(o, d, max);
+
+                        if (d.y < min)
+                            d = Intercept(o, d, min);
+
+                        DrawLine(o, d, color);
+                    }
+                }
+                else
+                {
+                    if (d.y > max)
+                    {
+                        d = Intercept(o, d, max);
+                        DrawLine(o, d, color);
+                    }
+                    else if (d.y < min)
+                    {
+                        d = Intercept(o, d, min);
+                        DrawLine(o, d, color);
+                    }
+                    else
+                    {
+                        DrawLine(o, d, color);
+                    }
+                }
+            }
+
+            static float2 Intercept(float2 p0, float2 p1, float y) => new float2(p0.x + (y - p0.y) * ((p0.x - p1.x) / (p0.y - p1.y)), y);
 
             struct FuncWrapper : IFunction
             {
@@ -173,77 +228,6 @@ namespace LineBurst
                 }
 
                 public float F(float x) => _func(x);
-            }
-
-            public void Plot<T>(T f, int samples, Color color) where T : IFunction
-            {
-                var step = _range.x / (samples - 1);
-                var x = _min.x;
-                var prev = new float2(x, f.F(x));
-
-                for (int i = 1; i < samples; i++)
-                {
-                    x += step;
-                    var y = f.F(x);
-                    var p = new float2(x, y);
-
-                    var o = prev;
-                    var d = p;
-
-                    var min = _min.y;
-                    var max = _max.y;
-
-                    if (o.y < min)
-                    {
-                        if (d.y > min)
-                        {
-                            o = Intercept(o, d, min);
-
-                            if (d.y > max)
-                                d = Intercept(o, d, max);
-
-                            DrawLine(o, d, color);
-                        }
-                    }
-                    else if (o.y > max)
-                    {
-                        if (d.y < max)
-                        {
-                            o = Intercept(o, d, max);
-
-                            if (d.y < min)
-                                d = Intercept(o, d, min);
-
-                            DrawLine(o, d, color);
-                        }
-                    }
-                    else
-                    {
-                        if (d.y > max)
-                        {
-                            d = Intercept(o, d, max);
-                            DrawLine(o, d, color);
-                        }
-                        else if (d.y < min)
-                        {
-                            d = Intercept(o, d, min);
-                            DrawLine(o, d, color);
-                        }
-                        else
-                        {
-                            DrawLine(o, d, color);
-                        }
-                    }
-
-                    prev = p;
-                }
-            }
-
-            static float2 Intercept(float2 p0, float2 p1, float y)
-            {
-                var v = p0 - p1;
-                var s = v.y / v.x;
-                return new float2(p0.x + (y - p0.y) / s, y);
             }
         }
     }
