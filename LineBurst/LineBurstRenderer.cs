@@ -1,8 +1,10 @@
 using System;
 using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 
 namespace LineBurst
 {
@@ -103,23 +105,32 @@ namespace LineBurst
                 LineMaterial = Resources.Load<Material>("LineBurstLineMaterial");
             if (Font == null)
                 Font = Resources.Load<Authoring.Font>("LineBurstDefaultFont");
-            if (_graphSettings.AxisDefault == new Color())
-                _graphSettings.AxisDefault = Color.black;
-            if (_graphSettings.GridDefault == new Color())
-                _graphSettings.GridDefault = new Color32(65, 65, 65, 255);
+            if (_graphSettings.AxisColor == new Color())
+                _graphSettings.AxisColor = Color.black;
+            if (_graphSettings.GridColor == new Color())
+                _graphSettings.GridColor = new Color32(65, 65, 65, 255);
+            if (_graphSettings.GridAltColor == new Color())
+                _graphSettings.GridAltColor = new Color32(65, 65, 65, 255);
+            if (_graphSettings.MarkingColor == new Color())
+                _graphSettings.MarkingColor = Color.black;
+            if (_graphSettings.MarkingScale <= 0)
+                _graphSettings.MarkingScale = .3f;
         }
 
         void Update()
         {
-            Draw.GraphSettings = _graphSettings;
+            Draw.DefaulGraphSettings = _graphSettings;
         }
 #endif
     }
 
     [Serializable]
-    struct GraphSettings
+    public struct GraphSettings
     {
-        public Color AxisDefault;
-        public Color GridDefault;
+        public Color AxisColor;
+        public Color GridColor;
+        public Color GridAltColor;
+        public Color MarkingColor;
+        public float MarkingScale;
     }
 }

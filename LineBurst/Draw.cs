@@ -307,70 +307,152 @@ namespace LineBurst
         }
         
         public static float FontWidth => Unmanaged.Instance.Data.Font.Value.Width;
-        internal static GraphSettings GraphSettings
+        
+        public static GraphSettings DefaulGraphSettings
         {
             get => Unmanaged.Instance.Data.GraphSettings;
-            set => Unmanaged.Instance.Data.GraphSettings = value;
+            internal set => Unmanaged.Instance.Data.GraphSettings = value;
         }
 
         public struct Graph
         {
             readonly float2 _min;
-            readonly float4x4 _tr;
+            readonly float2 _max;
+            readonly float2 _grid;
+            readonly int2 _markingInterval;
             readonly float2 _range;
+            readonly float4x4 _tr;
+            readonly float2 _scale;
+            readonly quaternion _rot;
             const float Epsilon = 1e-4f;
 
             public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid) 
-                : this(pos, size, min, max, grid, GraphSettings.AxisDefault, GraphSettings.GridDefault) { }
-            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid, Color axisColor)
-                : this(pos, size, min, max, grid, axisColor, GraphSettings.GridDefault) { }
+                : this(pos, size, min, max, grid, 1, DefaulGraphSettings) { }
+            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid, int2 markingInterval) 
+                : this(pos, size, min, max, grid, markingInterval, DefaulGraphSettings) { }
                 
-            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid, Color axisColor, Color gridColor)
+            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid, int2 markingInterval, GraphSettings settings)
             {
                 Assert.IsTrue(math.all(size > 0));
                 Assert.IsTrue(math.all(grid >= 0));
                 Assert.IsTrue(math.all(max > min));
 
                 _min = min;
+                _max = max;
+                _grid = grid;
+                _markingInterval = markingInterval;
                 _range = max - min;
-                var scale = size / _range;
-                _tr = float4x4.TRS(new float3(pos + -min * scale, 0), quaternion.identity, new float3(scale, 0));
+                _scale = size / _range;
+                _rot = quaternion.identity;
+                _tr = float4x4.TRS(new float3(pos + -min * _scale, 0), _rot, new float3(_scale, 1));
 
-                DrawGrid(min, max, grid, gridColor);
-                DrawAxes(min, max, axisColor);
+                DrawGrid(settings.GridColor);
+                DrawAxes(settings.AxisColor, settings.MarkingColor);
             }
 
-            void DrawGrid(float2 min, float2 max, float2 grid, Color color)
+            void DrawGrid(Color color)
             {
-                if (grid.y > 0)
+                if (_grid.y > 0)
                 {
-                    var y = min.y - min.y % grid.y;
-                    while (y < max.y + Epsilon)
+                    var y = _min.y - ModEpsilon(_min.y, _grid.y);
+                    while (y < _max.y + Epsilon)
                     {
                         if (math.abs(y) > Epsilon) 
-                            DrawLine(new float2(min.x, y), new float2(max.x, y), color);
-                        y += grid.y;
+                            DrawLine(new float2(_min.x, y), new float2(_max.x, y), color);
+                        y += _grid.y;
                     }
                 }
 
-                if (grid.x > 0)
+                if (_grid.x > 0)
                 {
-                    var x = min.x - min.x % grid.x;
-                    while (x < max.x + Epsilon)
+                    var x = _min.x - ModEpsilon(_min.x, _grid.x);
+                    while (x < _max.x + Epsilon)
                     {
                         if (math.abs(x) > Epsilon) 
-                            DrawLine(new float2(x, min.y), new float2(x, max.y), color);
-                        x += grid.x;
+                            DrawLine(new float2(x, _min.y), new float2(x, _max.y), color);
+                        x += _grid.x;
                     }
                 }
             }
 
-            void DrawAxes(float2 min, float2 max, Color color)
+            void DrawMarkingsX(float y, Color color)
             {
-                if (min.y <= 0 && max.y >= 0) 
-                    DrawLine(new float2(min.x, 0), new float2(max.x, 0), color);
-                if (min.x <= 0 && max.x >= 0) 
-                    DrawLine(new float2(0, min.y), new float2(0, max.y), color);
+                var step = _grid.x * _markingInterval.x;
+                var x = _min.x - ModEpsilon(_min.x, step);
+                while (x < _max.x + Epsilon)
+                {
+                    FixedString512 s = $"{System.Math.Round(x, 3)}";
+                    var l = math.abs(x) < Epsilon ? s.Length + 1.4f : s.Length;
+                    var pos = math.transform(_tr, new float3(x, y, 0));
+                    var tr = float4x4.TRS(pos, _rot, new float3(TextScale, TextScale, 1));
+                    tr = math.mul(tr, float4x4.Translate(new float3(-l * FontWidth / 2, 0, 0)));
+                    Text(s, tr, color);
+                    x += step;
+                }
+            }
+
+            void DrawMarkingsY(float x, Color color)
+            {
+                var step = _grid.y * _markingInterval.y;
+                var y = _min.y - ModEpsilon(_min.y, step);
+                while (y < _max.y + Epsilon)
+                {
+                    if (math.abs(y) > Epsilon)
+                    {
+                        FixedString512 s = $"{System.Math.Round(y, 3)}";
+                        var pos = math.transform(_tr, new float3(x, y, 0));
+                        var tr = float4x4.TRS(pos, _rot, new float3(TextScale, TextScale, 1));
+                        tr = math.mul(tr, float4x4.Translate(new float3(-(s.Length + .2f) * FontWidth, .5f, 0)));
+                        Text(s, tr, color);
+                    }
+                    y += step;
+                }
+            }
+            
+            float TextScale
+            {
+                get
+                {
+                    var f = _grid.x < _grid.y
+                        ? (_markingInterval.x > 1 ? 1.4f : 1) * _grid.x * _scale.y
+                        : (_markingInterval.y > 1 ? 1.4f : 1) * _grid.y * _scale.x;
+
+                    return DefaulGraphSettings.MarkingScale * f;
+                }
+            }
+
+            static float ModEpsilon(float a, float b)
+            {
+                var t = math.abs(a);
+                var s = math.sign(a);
+                while (t + Epsilon > b)
+                    t -= b;
+                if (t <= 0)
+                    return 0;
+                return s * t;
+            }
+
+            void DrawAxes(Color color, Color markingColor)
+            {
+                if (_min.y <= 0 && _max.y >= 0)
+                {
+                    DrawLine(new float2(_min.x, 0), new float2(_max.x, 0), color);
+                    DrawMarkingsX(0, markingColor);
+                }
+                else
+                {
+                    DrawMarkingsX(_min.y, markingColor);
+                }
+
+                if (_min.x <= 0 && _max.x >= 0)
+                {
+                    DrawLine(new float2(0, _min.y), new float2(0, _max.y), color);
+                    DrawMarkingsY(0, markingColor);
+                }
+                else
+                {
+                    DrawMarkingsY(_min.x, markingColor);
+                }
             }
 
             void DrawLine(float2 o, float2 d, Color color) => Line(math.transform(_tr, new float3(o, 0)), math.transform(_tr, new float3(d, 0)), color);
