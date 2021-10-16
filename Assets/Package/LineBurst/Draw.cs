@@ -1,3 +1,4 @@
+using Unity.Assertions;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
@@ -306,5 +307,39 @@ namespace LineBurst
         }
         
         public static float FontWidth => Unmanaged.Instance.Data.Font.Value.Width;
+
+        public struct Graph
+        {
+            readonly float2 _size;
+            readonly float2 _min;
+            readonly float2 _max;
+            readonly float2 _grid;
+            float4x4 _tr;
+
+            public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid)
+            {
+                Assert.IsTrue(math.all(size > 0));
+                Assert.IsTrue(math.all(grid >= 0));
+                Assert.IsTrue(math.all(max > min));
+                
+                _size = size;
+                _min = min;
+                _max = max;
+                _grid = grid;
+
+                var range = max - min;
+                _tr = float4x4.TRS(new float3(pos, 0), quaternion.identity, new float3(range / _size, 0));
+            }
+
+            public void Plot<T>(T f, int samples) where T : IFunction 
+            {
+                
+            }
+        }
+    }
+
+    public interface IFunction
+    {
+        float F(float x);
     }
 }

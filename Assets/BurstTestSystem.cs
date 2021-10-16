@@ -28,7 +28,7 @@ class BurstTestSystem : SystemBase
                 Draw.Sphere(new float3(-2, .8f, 0), .85f, Color.black, 64);
                 Draw.Cone(new float3(.2f, .1f, 0), 1, math.radians(20), Color.red);
                 Draw.Circle(new float3(3.2f, .8f, 0), .7f, normal, Color.yellow, 64);
-                Draw.Text("++LINEBURST++", Matrix4x4.TRS(new float3(-3.6f, -.4f, 0), quaternion.identity, new float3(1.6f)), Color.magenta);
+                Draw.Text("++LINEBURST++", float4x4.TRS(new float3(-3.6f, -.4f, 0), quaternion.identity, new float3(1.6f)), Color.magenta);
             })
             .Schedule();
     }
