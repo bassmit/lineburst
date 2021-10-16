@@ -234,7 +234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &668337295
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -550,3 +550,6 @@ MonoBehaviour:
   AutoClear: 1
   LineMaterial: {fileID: 2100000, guid: 79cf78c8762f66c4281f6fda01e695b0, type: 2}
   Font: {fileID: 1816785126561671821, guid: bcb2c00c2d585c9448fe3cc2cc1558ee, type: 3}
+  _graphSettings:
+    AxisDefault: {r: 0, g: 0, b: 0, a: 1}
+    GridDefault: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 1}

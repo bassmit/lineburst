@@ -21,13 +21,16 @@ namespace LineBurst
         
         public Authoring.Font Font;
 
+        [SerializeField]
+        GraphSettings _graphSettings;
+        
         void Awake()
         {
             if (DrawInGameView && GetComponent<Camera>() == null)
                 throw new Exception("LineBurstRenderer needs to be attached to the camera gameobject to draw in the game view");
 
             Assert.IsTrue(Managed.Instance == null);
-            Managed.Instance = new Managed(MaxLines, LineMaterial, Font.Convert());
+            Managed.Instance = new Managed(MaxLines, LineMaterial, Font.Convert(), _graphSettings);
             RenderPipelineManager.endFrameRendering += (arg1, arg2) => GameViewRender();
         }
 
@@ -100,7 +103,23 @@ namespace LineBurst
                 LineMaterial = Resources.Load<Material>("LineBurstLineMaterial");
             if (Font == null)
                 Font = Resources.Load<Authoring.Font>("LineBurstDefaultFont");
+            if (_graphSettings.AxisDefault == new Color())
+                _graphSettings.AxisDefault = Color.black;
+            if (_graphSettings.GridDefault == new Color())
+                _graphSettings.GridDefault = new Color32(65, 65, 65, 255);
+        }
+
+        void Update()
+        {
+            Draw.GraphSettings = _graphSettings;
         }
 #endif
+    }
+
+    [Serializable]
+    struct GraphSettings
+    {
+        public Color AxisDefault;
+        public Color GridDefault;
     }
 }
