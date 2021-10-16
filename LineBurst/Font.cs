@@ -15,11 +15,17 @@ namespace LineBurst
         internal BlobArray<int2> Indices;
         internal BlobArray<Glyph.Line> Lines;
 
-        public void Draw(FixedString512 text, Matrix4x4 transform, Color color)
+        public unsafe void Draw(FixedString32 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+        public unsafe void Draw(FixedString64 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+        public unsafe void Draw(FixedString128 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+        public unsafe void Draw(FixedString512 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+        public unsafe void Draw(FixedString4096 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+
+        unsafe void Draw(byte* text, int length, Matrix4x4 transform, Color color)
         {
             var offset = float2.zero;
             
-            for (int i = 0; i < text.Length; i++)
+            for (int i = 0; i < length; i++)
             {
                 var c = (int) text[i];
 
@@ -38,8 +44,8 @@ namespace LineBurst
                     for (int j = ind.x; j < ind.y; j++)
                     {
                         var line = Lines[j];
-                        var o = math.mul(transform, new float4(offset + line.Org, 0, 1)).xyz;
-                        var d = math.mul(transform, new float4(offset + line.Dest, 0, 1)).xyz;
+                        var o = math.transform(transform, new float3(offset + line.Org, 0));
+                        var d = math.transform(transform, new float3(offset + line.Dest, 0));
                         lines.Draw(o, d, color);
                     }
                 }

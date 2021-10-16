@@ -7,6 +7,8 @@ namespace LineBurst
 {
     public struct GraphSettings
     {
+        public readonly float2 Pos;
+        public readonly float2 Size;
         public readonly float2 Min;
         public readonly float2 Max;
         public readonly float2 Grid;
@@ -30,6 +32,8 @@ namespace LineBurst
             Assert.IsTrue(math.all(grid >= 0));
             Assert.IsTrue(math.all(max > min));
 
+            Pos = pos;
+            Size = size;
             Min = min;
             Max = max;
             Grid = grid;
