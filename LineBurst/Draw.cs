@@ -474,9 +474,64 @@ namespace LineBurst
                     x += step;
                     var y = f.F(x);
                     var p = new float2(x, y);
-                    DrawLine(prev, p, color);
+
+                    var o = prev;
+                    var d = p;
+
+                    var min = _min.y;
+                    var max = _max.y;
+
+                    if (o.y < min)
+                    {
+                        if (d.y > min)
+                        {
+                            o = Intercept(o, d, min);
+
+                            if (d.y > max)
+                                d = Intercept(o, d, max);
+
+                            DrawLine(o, d, color);
+                        }
+                    }
+                    else if (o.y > max)
+                    {
+                        if (d.y < max)
+                        {
+                            o = Intercept(o, d, max);
+
+                            if (d.y < min)
+                                d = Intercept(o, d, min);
+
+                            DrawLine(o, d, color);
+                        }
+                    }
+                    else
+                    {
+                        if (d.y > max)
+                        {
+                            d = Intercept(o, d, max);
+                            DrawLine(o, d, color);
+                        }
+                        else if (d.y < min)
+                        {
+                            d = Intercept(o, d, min);
+                            DrawLine(o, d, color);
+                        }
+                        else
+                        {
+                            DrawLine(o, d, color);
+                        }
+                    }
+
                     prev = p;
                 }
+            }
+
+            static float2 Intercept(float2 p0, float2 p1, float y)
+            {
+                var v = p0 - p1;
+                var s = v.y / v.x;
+                return new float2(p0.x + (y - p0.y) / s, y);
             }
         }
     }
