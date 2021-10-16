@@ -1,36 +1,12 @@
-using System;
-using Unity.Assertions;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace LineBurst
 {
-    // struct Color
-    // {
-    //     public static ColorIndex Quantize(float4 rgba)
-    //     {
-    //         var oldi = 0;
-    //         var oldd = math.lengthsq(rgba - Unmanaged.Instance.Data.ColorData[0]);
-    //         for (var i = 1; i < Unmanaged.KMaxColors; ++i)
-    //         {
-    //             var newd = math.lengthsq(rgba - Unmanaged.Instance.Data.ColorData[0]);
-    //             if (newd < oldd)
-    //             {
-    //                 oldi = i;
-    //                 oldd = newd;
-    //             }
-    //         }
-    //         return new ColorIndex {Value = oldi};
-    //     }
-    // }
-
     public static partial class Draw
     {
-        internal static BlobAssetReference<Font> Font;
-
         public struct Arrows
         {
             Lines _lines;
@@ -314,6 +290,25 @@ namespace LineBurst
             get => Unmanaged.Instance.Data.GraphSettings;
             internal set => Unmanaged.Instance.Data.GraphSettings = value;
         }
+        
+        // struct Color
+        // {
+        //     public static ColorIndex Quantize(float4 rgba)
+        //     {
+        //         var oldi = 0;
+        //         var oldd = math.lengthsq(rgba - Unmanaged.Instance.Data.ColorData[0]);
+        //         for (var i = 1; i < Unmanaged.KMaxColors; ++i)
+        //         {
+        //             var newd = math.lengthsq(rgba - Unmanaged.Instance.Data.ColorData[0]);
+        //             if (newd < oldd)
+        //             {
+        //                 oldi = i;
+        //                 oldd = newd;
+        //             }
+        //         }
+        //         return new ColorIndex {Value = oldi};
+        //     }
+        // }
     }
 
     public interface IFunction
