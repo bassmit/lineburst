@@ -24,16 +24,17 @@ class GraphTestSystem : SystemBase
             .WithBurst()
             .WithCode(() =>
             {
-                var size = new float2(1, 1);
+                var size = fix * new float2(1, 1);
                 const float border = .2f;
                 
                 var pos = new float2(0, 0);
                 var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1f);
-                graph.Plot(new Func0(), fix * 30, Color.red);
+                graph.Plot(new Func0(), 30, Color.red);
+                graph.Plot(new Func1(), 30, Color.blue);
 
                 pos.x += size.x + border;
                 graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1f);
-                graph.Plot(new Func0(), fix * 30, Color.red);
+                graph.Plot(new Func0(), 30, Color.red);
 
             })
             .Schedule();
@@ -42,5 +43,10 @@ class GraphTestSystem : SystemBase
     struct Func0 : IFunction
     {
         public float F(float x) => math.sin(x);
+    }
+
+    struct Func1 : IFunction
+    {
+        public float F(float x) => math.cos(x);
     }
 }
