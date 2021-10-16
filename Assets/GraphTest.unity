@@ -553,6 +553,6 @@ MonoBehaviour:
   _graphSettings:
     AxisColor: {r: 0, g: 0, b: 0, a: 1}
     GridColor: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 1}
-    GridAltColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
+    GridAltColor: {r: 0.11372549, g: 0.11372549, b: 0.11372549, a: 1}
     MarkingColor: {r: 1, g: 1, b: 1, a: 1}
     MarkingScale: 0.3
