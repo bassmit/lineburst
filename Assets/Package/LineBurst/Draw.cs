@@ -278,11 +278,12 @@ namespace LineBurst
 
         public static void Transform(float3 pos, quaternion rot, float size = 1) => new Transforms(1).Draw(pos, rot, size);
 
-        public static void Text(FixedString512 text, Matrix4x4 transform, Color color)
-        {
-            Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
-        }
-        
+        public static void Text(FixedString32 text, Matrix4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+        public static void Text(FixedString64 text, Matrix4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+        public static void Text(FixedString128 text, Matrix4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+        public static void Text(FixedString512 text, Matrix4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+        public static void Text(FixedString4096 text, Matrix4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+
         public static float FontWidth => Unmanaged.Instance.Data.Font.Value.Width;
         
         // struct Color

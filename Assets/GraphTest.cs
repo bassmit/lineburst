@@ -1,6 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 using LineBurst;
+using Unity.Collections;
 using Unity.Mathematics;
 
 class GraphTest : MonoBehaviour
@@ -21,23 +22,29 @@ class GraphTestSystem : SystemBase
         var fix = 1;
         
         Job
-            .WithBurst()
+            //.WithBurst()
             .WithCode(() =>
             {
-                var size = fix * new float2(1, 1);
-                const float border = .2f;
+                var size = fix * new float2(1, 2);
+                const float border = .5f;
                 
                 var pos = new float2(0, 0);
-                var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1);
-                graph.Plot(new Func0(), 30, Color.red);
-                graph.Plot(new Func1(), 30, Color.blue);
+                // var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1);
+                // graph.Plot(new Func0(), 30, Color.red);
+                // graph.Plot(new Func2(), 30, Color.green);
+                // var a = new NativeArray<float>(2, Allocator.Temp);
+                // a[0] = -math.PI / 2;
+                // a[1] = math.PI / 2;
+                // graph.Plot(new Func1(), 30, Color.blue, a);
 
                 pos.x += size.x + border;
                 var s = new GraphSettings(pos, size * 2, -new float2(math.PI, .5f), math.PI, 1f / 3)
                 {
-                    MarkingInterval = 2
+                    MarkingInterval = 2,
+                    HorizontalAxisName = "HORIZONTAL AXIS3!!",
+                    VerticalAxisName = "VERTICALLL"
                 };
-                graph = new Draw.Graph(s);
+                var graph = new Draw.Graph(s);
                 graph.Plot(new Func0(), 30, Color.red);
 
             })
@@ -51,6 +58,12 @@ class GraphTestSystem : SystemBase
 
     struct Func1 : IFunction
     {
+        public float F(float x) => math.tan(x);
+    }
+    
+    struct Func2 : IFunction
+    {
         public float F(float x) => math.cos(x);
     }
+
 }
