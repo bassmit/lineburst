@@ -28,8 +28,7 @@ namespace LineBurst.Authoring
 
             var font = (Font) target;
             var glyphs = font.Glyphs;
-            var sY = font.Size.y;
-            var sX = font.Size.x;
+            var w = font.Width;
 
             _camera = SceneView.lastActiveSceneView.camera;
             if (_lineMat == null)
@@ -42,28 +41,27 @@ namespace LineBurst.Authoring
             
             if (_rulers)
             {
-                EmitLine(new float2(0, 0), new float2(sX * glyphs.Length, 0), Color.black);
-                EmitLine(new float2(0, sY * font.MarginBottom), new float2(sX * glyphs.Length, sY * font.MarginBottom), Color.gray);
-                EmitLine(new float2(0, sY * (1 - font.MarginTop)), new float2(sX * glyphs.Length, sY * (1 - font.MarginTop)), Color.gray);
-                EmitLine(new float2(0, sY), new float2(sX * glyphs.Length, sY), Color.black);
+                EmitLine(new float2(0, 0), new float2(w * glyphs.Length, 0), Color.black);
+                EmitLine(new float2(0, font.MarginBottom), new float2(w * glyphs.Length, font.MarginBottom), Color.gray);
+                EmitLine(new float2(0, 1 - font.MarginTop), new float2(w * glyphs.Length, 1 - font.MarginTop), Color.gray);
+                EmitLine(new float2(0, 1), new float2(w * glyphs.Length, 1), Color.black);
 
                 for (int i = 0; i <= glyphs.Length; i++)
-                    EmitLine(new float2(sX * i, 0), new float2(sX * i, sY), Color.black);
+                    EmitLine(new float2(w * i, 0), new float2(w * i, 1), Color.black);
 
                 for (int i = 0; i < glyphs.Length; i++)
                 {
-                    EmitLine(new float2(sX * (i + font.MarginSide), 0), new float2(sX * (i + font.MarginSide), sY), Color.gray);
-                    EmitLine(new float2(sX * (i + 1 - font.MarginSide), 0), new float2(sX * (i + 1 - font.MarginSide), sY), Color.gray);
+                    EmitLine(new float2(w * (i + font.MarginSide), 0), new float2(w * (i + font.MarginSide), 1), Color.gray);
+                    EmitLine(new float2(w * (i + 1 - font.MarginSide), 0), new float2(w * (i + 1 - font.MarginSide), 1), Color.gray);
                 }
             }
 
             var editingLine = _editingVertex / 2;
-            var size = font.Size * new float2(1 - 2 * font.MarginSide, 1 - font.MarginBottom - font.MarginTop);
+            var size = new float2(font.Width * (1 - 2 * font.MarginSide), 1 - font.MarginBottom - font.MarginTop);
 
-            // Characters
             for (int i = 0; i < glyphs.Length; i++)
             {
-                var offset = font.Size * new float2(i + font.MarginSide, font.MarginBottom);
+                var offset = font.Width * new float2(i + font.MarginSide, font.MarginBottom);
             
                 for (var j = 0; j < glyphs[i].Lines.Length; j++)
                 {
@@ -164,7 +162,7 @@ namespace LineBurst.Authoring
             
             if (editingLine < lines.Length)
             {
-                var offset = font.Size * new float2(_editingGlyph + font.MarginSide, font.MarginBottom);
+                var offset = font.Width * new float2(_editingGlyph + font.MarginSide, font.MarginBottom);
                 
                 EditorGUI.BeginChangeCheck();
                 var line = lines[editingLine];

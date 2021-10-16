@@ -306,7 +306,7 @@ namespace LineBurst
             Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
         }
         
-        public static float2 FontSize => Unmanaged.Instance.Data.Font.Value.Size;
+        public static float FontWidth => Unmanaged.Instance.Data.Font.Value.Width;
     }
 
     public struct Line
@@ -327,7 +327,7 @@ namespace LineBurst
         internal const int FirstAscii = 33;
         internal const int FinalAscii = 126;
 
-        internal float2 Size;
+        internal float Width;
         internal BlobArray<int2> Indices;
         internal BlobArray<Glyph.Line> Lines;
 
@@ -342,7 +342,7 @@ namespace LineBurst
                 if (c == '\n')
                 {
                     offset.x = 0;
-                    offset.y -= Size.y;
+                    --offset.y;
                     continue;
                 }
 
@@ -360,7 +360,7 @@ namespace LineBurst
                     }
                 }
 
-                offset.x += Size.x;
+                offset.x += Width;
             }
         }
     }
