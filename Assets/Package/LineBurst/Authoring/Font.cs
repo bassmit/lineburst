@@ -13,7 +13,7 @@ namespace LineBurst.Authoring
         [HideInInspector]
         public int TotalLines;
         public float MarginBottom = .25f;
-        public float MarginTop = .75f;
+        public float MarginTop = .25f;
         public float MarginSide = .15f;
         public Glyph[] Glyphs;
 
