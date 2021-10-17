@@ -43,10 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 600b77711de54aaca932c4aea9e8c3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Size:
-    x: 0.4
-    y: 1
-  TotalLines: 142
+  Width: 0.4
+  TotalLines: 141
   MarginBottom: 0.25
   MarginTop: 0.25
   MarginSide: 0.15
@@ -139,12 +137,6 @@ MonoBehaviour:
       Dest:
         x: 0
         y: 0
-    - Org:
-        x: 0.5
-        y: 0.3
-      Dest:
-        x: 0.5
-        y: 0.7
   - Lines:
     - Org:
         x: 0.5

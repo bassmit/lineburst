@@ -1,8 +1,10 @@
 using System;
 using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 
 namespace LineBurst
 {
@@ -20,7 +22,7 @@ namespace LineBurst
         public Material LineMaterial;
         
         public Authoring.Font Font;
-
+        
         void Awake()
         {
             if (DrawInGameView && GetComponent<Camera>() == null)

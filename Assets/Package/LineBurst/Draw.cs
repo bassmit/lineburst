@@ -1,35 +1,12 @@
-using LineBurst.Authoring;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace LineBurst
 {
-    // struct Color
-    // {
-    //     public static ColorIndex Quantize(float4 rgba)
-    //     {
-    //         var oldi = 0;
-    //         var oldd = math.lengthsq(rgba - Unmanaged.Instance.Data.ColorData[0]);
-    //         for (var i = 1; i < Unmanaged.KMaxColors; ++i)
-    //         {
-    //             var newd = math.lengthsq(rgba - Unmanaged.Instance.Data.ColorData[0]);
-    //             if (newd < oldd)
-    //             {
-    //                 oldi = i;
-    //                 oldd = newd;
-    //             }
-    //         }
-    //         return new ColorIndex {Value = oldi};
-    //     }
-    // }
-
-    public static class Draw
+    public static partial class Draw
     {
-        internal static BlobAssetReference<Font> Font;
-
         public struct Arrows
         {
             Lines _lines;
@@ -301,67 +278,36 @@ namespace LineBurst
 
         public static void Transform(float3 pos, quaternion rot, float size = 1) => new Transforms(1).Draw(pos, rot, size);
 
-        public static void Text(FixedString512 text, Matrix4x4 transform, Color color)
-        {
-            Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
-        }
+        public static void Text(FixedString32 text, float4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+        public static void Text(FixedString64 text, float4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+        public static void Text(FixedString128 text, float4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+        public static void Text(FixedString512 text, float4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+        public static void Text(FixedString4096 text, float4x4 transform, Color color) => Unmanaged.Instance.Data.Font.Value.Draw(text, transform, color);
+
+        public static float FontWidth => Unmanaged.Instance.Data.Font.Value.Width;
         
-        public static float2 FontSize => Unmanaged.Instance.Data.Font.Value.Size;
+        // struct Color
+        // {
+        //     public static ColorIndex Quantize(float4 rgba)
+        //     {
+        //         var oldi = 0;
+        //         var oldd = math.lengthsq(rgba - Unmanaged.Instance.Data.ColorData[0]);
+        //         for (var i = 1; i < Unmanaged.KMaxColors; ++i)
+        //         {
+        //             var newd = math.lengthsq(rgba - Unmanaged.Instance.Data.ColorData[0]);
+        //             if (newd < oldd)
+        //             {
+        //                 oldi = i;
+        //                 oldd = newd;
+        //             }
+        //         }
+        //         return new ColorIndex {Value = oldi};
+        //     }
+        // }
     }
 
-    public struct Line
+    public interface IFunction
     {
-        public float4 Begin;
-        public float4 End;
-
-        internal Line(float3 begin, float3 end, Color color)
-        {
-            var packedColor = ((int) (color.r * 63) << 18) | ((int) (color.g * 63) << 12) | ((int) (color.b * 63) << 6) | (int) (color.a * 63);
-            Begin = new float4(begin, packedColor);
-            End = new float4(end, packedColor);
-        }
-    }
-    
-    struct Font
-    {
-        internal const int FirstAscii = 33;
-        internal const int FinalAscii = 126;
-
-        internal float2 Size;
-        internal BlobArray<int2> Indices;
-        internal BlobArray<Glyph.Line> Lines;
-
-        public void Draw(FixedString512 text, Matrix4x4 transform, Color color)
-        {
-            var offset = float2.zero;
-            
-            for (int i = 0; i < text.Length; i++)
-            {
-                var c = (int) text[i];
-
-                if (c == '\n')
-                {
-                    offset.x = 0;
-                    offset.y -= Size.y;
-                    continue;
-                }
-
-                if (c >= FirstAscii && c <= FinalAscii)
-                {
-                    var ind = Indices[c - FirstAscii];
-                    var amount = ind.y - ind.x;
-                    var lines = new Draw.Lines(amount);
-                    for (int j = ind.x; j < ind.y; j++)
-                    {
-                        var line = Lines[j];
-                        var o = math.mul(transform, new float4(offset + line.Org, 0, 1)).xyz;
-                        var d = math.mul(transform, new float4(offset + line.Dest, 0, 1)).xyz;
-                        lines.Draw(o, d, color);
-                    }
-                }
-
-                offset.x += Size.x;
-            }
-        }
+        float F(float x);
     }
 }
