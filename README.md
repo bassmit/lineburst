@@ -2,9 +2,12 @@
 <p align="center">
   <img src="https://github.com/bassmit/images/blob/master/LineBurst/lineburst02.png?raw=true">
 </p>
+<p align="center">
+  <img src="https://github.com/bassmit/images/blob/master/LineBurst/lineburst03.png?raw=true">
+</p>
 
 ## Introduction
-Draw large amounts of debug lines, shapes and text to the Unity Game and Scene View, from BURST compiled jobs or MonoBehaviours. The default font misses lower case letters and many signs, a basic editor is provided in the scene view when a font is selected, pull requests are welcome ; ) The Unity Physics package forms the basis of this package.
+Plot functions and draw large amounts of debug lines, shapes and text to the Unity Game and Scene View, from BURST compiled jobs or MonoBehaviours.
 
 ## Installation
 The master branch contains a full Unity 2020.3 LTS project.
@@ -27,3 +30,6 @@ When the amount of elements to be drawn is known allocate the required buffer in
     var spheres = new Draw.Spheres(amount);
     for (int i = 0; i < amount; i++)
         spheres.Draw(points[i], radii[i], colors[i]);
+
+## Notes
+The default font misses lower case letters and many signs, a basic editor is provided in the scene view when a font is selected, pull requests are welcome ; ) The Unity Physics package forms the basis of this package.
