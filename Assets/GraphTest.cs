@@ -25,17 +25,17 @@ class GraphTestSystem : SystemBase
             //.WithBurst()
             .WithCode(() =>
             {
-                var size = fix * new float2(1, 2);
+                var size = fix * new float2(1, 1);
                 const float border = .5f;
                 
                 var pos = new float2(0, 0);
-                // var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1);
-                // graph.Plot(new Func0(), 30, Color.red);
-                // graph.Plot(new Func2(), 30, Color.green);
-                // var a = new NativeArray<float>(2, Allocator.Temp);
-                // a[0] = -math.PI / 2;
-                // a[1] = math.PI / 2;
-                // graph.Plot(new Func1(), 30, Color.blue, a);
+                var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1);
+                graph.Plot(new Func0(), 30, Color.red);
+                graph.Plot(new Func2(), 30, Color.green);
+                var a = new NativeArray<float>(2, Allocator.Temp);
+                a[0] = -math.PI / 2;
+                a[1] = math.PI / 2;
+                graph.Plot(new Func1(), 30, Color.blue, a);
 
                 pos.x += size.x + border;
                 var s = new GraphSettings(pos, size * 2, -new float2(math.PI, .5f), math.PI, 1f / 3)
@@ -44,7 +44,7 @@ class GraphTestSystem : SystemBase
                     HorizontalAxisName = "HORIZONTAL AXIS3!!",
                     VerticalAxisName = "VERTICALLL"
                 };
-                var graph = new Draw.Graph(s);
+                graph = new Draw.Graph(s);
                 graph.Plot(new Func0(), 30, Color.red);
 
             })
