@@ -10,6 +10,8 @@ namespace LineBurst
         public struct Graph
         {
             readonly GraphSettings _s;
+            readonly float _referenceScale;
+            float _offsetY;
             const float Epsilon = 1e-4f;
 
             public Graph(float2 pos, float2 size, float2 min, float2 max, float2 grid) : this(new GraphSettings(pos, size, min, max, grid)) { }
@@ -17,15 +19,24 @@ namespace LineBurst
             public Graph(GraphSettings settings)
             {
                 _s = settings;
+                _offsetY = 0;
+                
+                var shortestAxisLength = math.min(_s.Size.x, _s.Size.y);
+                var smallestScale = math.min(_s.Scale.x, _s.Scale.y);
+                var longestAxisNameLength = math.max(_s.HorizontalAxisName.Length, _s.VerticalAxisName.Length);
+                var scaleFromMarkingScale = 1.8f * _s.MarkingScale * smallestScale * FontWidth;
+                var scaleFromAxisLength = .8f * shortestAxisLength / (longestAxisNameLength * FontWidth);
+                _referenceScale = math.min(scaleFromMarkingScale, scaleFromAxisLength);
+                
                 DrawGrid(_s.GridColor, _s.GridAltColor);
                 DrawAxes(_s.AxisColor, _s.MarkingColor);
-                DrawAxisNames();
+                DrawEmbellishments();
             }
 
-            public void Plot(Func<float, float> f, int samples, Color color, NativeArray<float> explicitSamples = default, float maxAmplitude = 1e+6f)
-                => Plot(new FuncWrapper(f), samples, color, explicitSamples, maxAmplitude);
+            public void Plot(Func<float, float> f, int samples, Color color, FixedString32 description = default, NativeArray<float> explicitSamples = default, float maxAmplitude = 1e+6f)
+                => Plot(new FuncWrapper(f), samples, color, description, explicitSamples, maxAmplitude);
 
-            public void Plot<T>(T f, int samples, Color color, NativeArray<float> explicitSamples = default, float maxAmplitude = 1e+6f) where T : IFunction
+            public void Plot<T>(T f, int samples, Color color, FixedString32 description = default, NativeArray<float> explicitSamples = default, float maxAmplitude = 1e+6f) where T : IFunction
             {
                 var l = new NativeList<float>(samples + (explicitSamples.IsCreated ? explicitSamples.Length : 0), Allocator.Temp);
                 l.Add(_s.Min.x);
@@ -51,6 +62,24 @@ namespace LineBurst
                     var p = new float2(l[i], f.F(l[i]));
                     DrawClamped<T>(prev, p, color, maxAmplitude);
                     prev = p;
+                }
+
+                if (description.Length > 0)
+                {
+                    var textPos = _s.Pos;
+                    textPos.y += _offsetY;
+                    textPos.x += 2 * _referenceScale;
+                    var tr = float4x4.TRS(textPos.ToXYf(), quaternion.identity, new float3(_referenceScale, _referenceScale, 1));
+                    Text(description, tr, _s.MarkingColor);
+                    
+                    var linePos = _s.Pos;
+                    _offsetY -= .5f * _referenceScale;
+                    linePos.x += .5f * _referenceScale;
+                    linePos.y += _offsetY;
+                    var d = linePos;
+                    d.x += _referenceScale;
+                    Line(linePos.ToXYf(), d.ToXYf(), color);
+                    _offsetY -= .8f * _referenceScale;
                 }
             }
 
@@ -158,30 +187,36 @@ namespace LineBurst
                 }
             }
 
-            void DrawAxisNames()
+            void DrawEmbellishments()
             {
-                var shortestAxisLength = math.min(_s.Size.x, _s.Size.y);
-                var smallestScale = math.min(_s.Scale.x, _s.Scale.y);
-                var longestAxisNameLength = math.max(_s.HorizontalAxisName.Length, _s.VerticalAxisName.Length);
-                var scaleFromMarkingScale = 2.5f * _s.MarkingScale * smallestScale * FontWidth;
-                var scaleFromAxisLength = .8f * shortestAxisLength / (longestAxisNameLength * FontWidth);
-                var scale = math.min(scaleFromMarkingScale, scaleFromAxisLength);
-
                 if (_s.HorizontalAxisName.Length > 0)
                 {
                     var pos = _s.Pos.ToXYf();
-                    pos.x += _s.Size.x / 2 - _s.HorizontalAxisName.Length * FontWidth / 2 * scale;
-                    pos.y -= .3f * scale;
-                    var tr = float4x4.TRS(pos, quaternion.identity, new float3(scale, scale, 1));
+                    pos.x += _s.Size.x / 2 - _s.HorizontalAxisName.Length * FontWidth / 2 * _referenceScale;
+                    _offsetY -= .3f * _referenceScale;
+                    pos.y += _offsetY;
+                    var tr = float4x4.TRS(pos, quaternion.identity, new float3(_referenceScale, _referenceScale, 1));
                     Text(_s.HorizontalAxisName, tr, _s.MarkingColor);
+                    _offsetY -= _referenceScale;
                 }
                 
+                if (_s.Title.Length > 0)
+                {
+                    var pos = _s.Pos.ToXYf();
+                    pos.x += .5f * _referenceScale;
+                    var titleScale = 1.4f * _referenceScale;
+                    pos.y += _offsetY;
+                    var tr = float4x4.TRS(pos, quaternion.identity, new float3(titleScale, titleScale, 1));
+                    Text(_s.Title, tr, _s.MarkingColor);
+                    _offsetY -= titleScale;
+                }
+
                 if (_s.VerticalAxisName.Length > 0)
                 {
                     var pos = _s.Pos.ToXYf();
-                    pos.x -= 1.3f * scale;
-                    pos.y += _s.Size.y / 2 - _s.VerticalAxisName.Length * FontWidth / 2 * scale;
-                    var tr = float4x4.TRS(pos, quaternion.RotateZ(math.PI / 2), new float3(scale, scale, 1));
+                    pos.x -= 1.3f * _referenceScale;
+                    pos.y += _s.Size.y / 2 - _s.VerticalAxisName.Length * FontWidth / 2 * _referenceScale;
+                    var tr = float4x4.TRS(pos, quaternion.RotateZ(math.PI / 2), new float3(_referenceScale, _referenceScale, 1));
                     Text(_s.VerticalAxisName, tr, _s.MarkingColor);
                 }
             }

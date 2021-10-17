@@ -23,6 +23,7 @@ namespace LineBurst
         public Color GridAltColor;
         public Color MarkingColor;
         public float MarkingScale;
+        public FixedString64 Title;
         public FixedString64 HorizontalAxisName;
         public FixedString64 VerticalAxisName;
 
@@ -48,6 +49,7 @@ namespace LineBurst
             GridAltColor = new Color(.11f, .11f, .11f, 1);
             MarkingColor = Color.white;
             MarkingScale = .4f;
+            Title = "";
             HorizontalAxisName = "";
             VerticalAxisName = "";
         }
