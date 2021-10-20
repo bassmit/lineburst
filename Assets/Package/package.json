@@ -6,7 +6,7 @@
   "dependencies": {
     "com.unity.entities": "0.17.0-preview.42"
   },
-  "description": "Plot Functions and draw large amounts of lines, shapes and text to the game and scene view. The Unity Physics package forms the basis of this package",
+  "description": "Plot functions and draw large amounts of lines, shapes and text to the game and scene view. The Unity Physics package forms the basis of this package",
   "author" : {
     "name" : "Bas Smit",
     "email" : "bas@bassmit.info",

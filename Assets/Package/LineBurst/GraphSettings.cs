@@ -22,6 +22,7 @@ namespace LineBurst
         public Color GridColor;
         public Color GridAltColor;
         public Color MarkingColor;
+        public float UiBaseScale;
         public float MarkingScale;
         public float AxisNameScale;
         public float LegendScale;
@@ -51,6 +52,7 @@ namespace LineBurst
             GridColor = new Color(.25f, .25f, .25f, 1);
             GridAltColor = new Color(.11f, .11f, .11f, 1);
             MarkingColor = Color.white;
+            UiBaseScale = 1;
             MarkingScale = 1;
             AxisNameScale = 1;
             LegendScale = 1;
