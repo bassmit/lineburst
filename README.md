@@ -10,15 +10,13 @@
 Plot functions and draw large amounts of debug lines, shapes and text to the Unity Game and Scene View, from BURST compiled jobs or MonoBehaviours.
 
 ## Installation
-The master branch contains a full Unity 2020.3 LTS project.
+If [OpenUpm](https://openupm.com/packages/com.bassmit.lineburst/) is not installed, ensure node.js is installed so you have access to npm and run:
+    
+    npm install -g openupm-cli
+    
+To add LineBurst to a Unity project, open a prompt in the project root and run:
 
-The recommended way of installing LineBurst is through the [OpenUPM](https://openupm.com/packages/com.bassmit.lineburst/) package installer (top right). Download and add the unitypackage to a project to install LineBurst, including setting up the scoped registry required.
-
-Alternatively, open the package manager, choose Add package from git URL and enter:
-
-    https://github.com/bassmit/lineburst.git#upm
-
-You will not be notified of updates to LineBurst, or other packages installed in this way.
+    openupm add com.bassmit.lineburst
  
 ## Getting Started
 Create a LineBurstRenderer behaviour, then use the thread safe static APIs like:
@@ -30,6 +28,8 @@ When the amount of elements to be drawn is known allocate the required buffer in
     var spheres = new Draw.Spheres(amount);
     for (int i = 0; i < amount; i++)
         spheres.Draw(points[i], radii[i], colors[i]);
+        
+For additional examples install the Samples through the package manager, or check out the master branch which contains a 2020.3 LTS Unity project.
 
 ## Notes
-The default font misses lower case letters and many signs, a basic editor is provided in the scene view when a font is selected, pull requests are welcome ; ) The Unity Physics package forms the basis of this package.
+The default font is missing lower case letters and many signs, a basic editor is provided in the scene view when a font is selected, pull requests are welcome ; ) The Unity Physics package forms the basis of this package.
