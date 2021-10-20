@@ -26,7 +26,7 @@ class GraphTestSystem : SystemBase
             {
                 var size = fix * new float2(1, 1);
                 const float border = .5f;
-                
+
                 var pos = new float2(0, 0);
                 var graph = new Draw.Graph(pos, size, -math.PI, math.PI, 1);
                 graph.Plot(new Func0(), 30, Color.red, "SIN");
