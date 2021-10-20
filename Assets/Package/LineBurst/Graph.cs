@@ -10,7 +10,10 @@ namespace LineBurst
         public struct Graph
         {
             readonly GraphSettings _s;
-            readonly float _referenceScale;
+            float AxisNameScale => .25f * _s.AxisNameScale;
+            float MarkingScale => .15f * _s.MarkingScale;
+            float TitleScale => .3f * _s.TitleScale;
+            float LegendScale => .17f * _s.LegendScale;
             float _offsetY;
             const float Epsilon = 1e-4f;
 
@@ -20,17 +23,10 @@ namespace LineBurst
             {
                 _s = settings;
                 _offsetY = 0;
-                
-                var shortestAxisLength = math.min(_s.Size.x, _s.Size.y);
-                var smallestScale = math.min(_s.Scale.x, _s.Scale.y);
-                var longestAxisNameLength = math.max(_s.HorizontalAxisName.Length, _s.VerticalAxisName.Length);
-                var scaleFromMarkingScale = 1.8f * _s.MarkingScale * smallestScale * FontWidth;
-                var scaleFromAxisLength = .8f * shortestAxisLength / (longestAxisNameLength * FontWidth);
-                _referenceScale = math.min(scaleFromMarkingScale, scaleFromAxisLength);
-                
                 DrawGrid(_s.GridColor, _s.GridAltColor);
                 DrawAxes(_s.AxisColor, _s.MarkingColor);
-                DrawEmbellishments();
+                DrawTitle();
+                _offsetY -= LegendScale * .3f;
             }
 
             public void Plot(Func<float, float> f, int samples, Color color, FixedString32 description = default, NativeArray<float> explicitSamples = default, float maxAmplitude = 1e+6f)
@@ -68,18 +64,18 @@ namespace LineBurst
                 {
                     var textPos = _s.Pos;
                     textPos.y += _offsetY;
-                    textPos.x += 2 * _referenceScale;
-                    var tr = float4x4.TRS(textPos.ToXYf(), quaternion.identity, new float3(_referenceScale, _referenceScale, 1));
+                    textPos.x += 2 * LegendScale;
+                    var tr = float4x4.TRS(textPos.ToXYf(), quaternion.identity, new float3(LegendScale, LegendScale, 1));
                     Text(description, tr, _s.MarkingColor);
                     
                     var linePos = _s.Pos;
-                    _offsetY -= .5f * _referenceScale;
-                    linePos.x += .5f * _referenceScale;
+                    _offsetY -= .5f * LegendScale;
+                    linePos.x += .5f * LegendScale;
                     linePos.y += _offsetY;
                     var d = linePos;
-                    d.x += _referenceScale;
+                    d.x += LegendScale;
                     Line(linePos.ToXYf(), d.ToXYf(), color);
-                    _offsetY -= .8f * _referenceScale;
+                    _offsetY -= .8f * LegendScale;
                 }
             }
 
@@ -151,9 +147,7 @@ namespace LineBurst
                 }
             }
 
-            float TextScale => _s.MarkingScale * (_s.Grid.x < _s.Grid.y
-                                   ? (_s.MarkingInterval.x > 1 ? 1.4f : 1) * _s.Grid.x * _s.Scale.y
-                                   : (_s.MarkingInterval.y > 1 ? 1.4f : 1) * _s.Grid.y * _s.Scale.x);
+            float TextScale => math.all(_s.MarkingInterval > 1) ? 1.4f * MarkingScale : MarkingScale;
 
             static float ModEpsilon(float a, float b)
             {
@@ -185,39 +179,29 @@ namespace LineBurst
                 {
                     DrawMarkingsY(_s.Min.x, markingColor);
                 }
-            }
-
-            void DrawEmbellishments()
-            {
+                
                 if (_s.HorizontalAxisName.Length > 0)
                 {
                     var pos = _s.Pos.ToXYf();
-                    pos.x += _s.Size.x / 2 - _s.HorizontalAxisName.Length * FontWidth / 2 * _referenceScale;
-                    _offsetY -= .3f * _referenceScale;
+                    pos.x += _s.Size.x / 2 - _s.HorizontalAxisName.Length * FontWidth / 2 * AxisNameScale;
+                    _offsetY -= .3f * AxisNameScale;
                     pos.y += _offsetY;
-                    var tr = float4x4.TRS(pos, quaternion.identity, new float3(_referenceScale, _referenceScale, 1));
+                    var tr = float4x4.TRS(pos, quaternion.identity, new float3(AxisNameScale, AxisNameScale, 1));
                     Text(_s.HorizontalAxisName, tr, _s.MarkingColor);
-                    _offsetY -= _referenceScale;
+                    _offsetY -= AxisNameScale;
                 }
-                
+            }
+
+            void DrawTitle()
+            {
                 if (_s.Title.Length > 0)
                 {
                     var pos = _s.Pos.ToXYf();
-                    pos.x += .5f * _referenceScale;
-                    var titleScale = 1.4f * _referenceScale;
+                    pos.x += .5f * AxisNameScale;
                     pos.y += _offsetY;
-                    var tr = float4x4.TRS(pos, quaternion.identity, new float3(titleScale, titleScale, 1));
+                    var tr = float4x4.TRS(pos, quaternion.identity, new float3(TitleScale, TitleScale, 1));
                     Text(_s.Title, tr, _s.MarkingColor);
-                    _offsetY -= titleScale;
-                }
-
-                if (_s.VerticalAxisName.Length > 0)
-                {
-                    var pos = _s.Pos.ToXYf();
-                    pos.x -= 1.3f * _referenceScale;
-                    pos.y += _s.Size.y / 2 - _s.VerticalAxisName.Length * FontWidth / 2 * _referenceScale;
-                    var tr = float4x4.TRS(pos, quaternion.RotateZ(math.PI / 2), new float3(_referenceScale, _referenceScale, 1));
-                    Text(_s.VerticalAxisName, tr, _s.MarkingColor);
+                    _offsetY -= TitleScale;
                 }
             }
 
