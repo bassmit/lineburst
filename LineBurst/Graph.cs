@@ -10,10 +10,11 @@ namespace LineBurst
         public struct Graph
         {
             readonly GraphSettings _s;
-            float AxisNameScale => .25f * _s.AxisNameScale;
-            float MarkingScale => .15f * _s.MarkingScale;
-            float TitleScale => .3f * _s.TitleScale;
-            float LegendScale => .17f * _s.LegendScale;
+            float BaseScale => math.clamp(math.min(_s.Size.x, _s.Size.y), 1, 5) * _s.UiBaseScale;
+            float AxisNameScale => BaseScale * .1f * _s.AxisNameScale;
+            float MarkingScale => (math.all(_s.MarkingInterval > 1) ? 1.4f : 1) * .15f * _s.MarkingScale;
+            float TitleScale => BaseScale * .1f * _s.TitleScale;
+            float LegendScale => BaseScale * .06f * _s.LegendScale;
             float _offsetY;
             const float Epsilon = 1e-4f;
 
@@ -121,7 +122,7 @@ namespace LineBurst
                     FixedString32 s = $"{System.Math.Round(x, 3)}";
                     var l = math.abs(x) < Epsilon ? s.Length + 1.4f : s.Length;
                     var pos = math.transform(_s.Tr, new float3(x, y, 0));
-                    var tr = float4x4.TRS(pos, _s.Rot, new float3(TextScale, TextScale, 1));
+                    var tr = float4x4.TRS(pos, _s.Rot, new float3(MarkingScale, MarkingScale, 1));
                     tr = math.mul(tr, float4x4.Translate(new float3(-l * FontWidth / 2, 0, 0)));
                     Text(s, tr, color);
                     x += step;
@@ -138,7 +139,7 @@ namespace LineBurst
                     {
                         FixedString32 s = $"{System.Math.Round(y, 3)}";
                         var pos = math.transform(_s.Tr, new float3(x, y, 0));
-                        var tr = float4x4.TRS(pos, _s.Rot, new float3(TextScale, TextScale, 1));
+                        var tr = float4x4.TRS(pos, _s.Rot, new float3(MarkingScale, MarkingScale, 1));
                         tr = math.mul(tr, float4x4.Translate(new float3(-(s.Length + .2f) * FontWidth, .5f, 0)));
                         Text(s, tr, color);
                     }
@@ -146,8 +147,6 @@ namespace LineBurst
                     y += step;
                 }
             }
-
-            float TextScale => math.all(_s.MarkingInterval > 1) ? 1.4f * MarkingScale : MarkingScale;
 
             static float ModEpsilon(float a, float b)
             {
