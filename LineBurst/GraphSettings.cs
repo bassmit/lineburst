@@ -27,9 +27,9 @@ namespace LineBurst
         public float AxisNameScale;
         public float LegendScale;
         public float TitleScale;
-        public FixedString64 Title;
-        public FixedString64 HorizontalAxisName;
-        public FixedString64 VerticalAxisName;
+        public FixedString64Bytes Title;
+        public FixedString64Bytes HorizontalAxisName;
+        public FixedString64Bytes VerticalAxisName;
 
         public GraphSettings(float2 pos, float2 size, float2 min, float2 max, float2 grid)
         {
