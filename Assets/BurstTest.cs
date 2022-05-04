@@ -20,7 +20,7 @@ partial class BurstTestSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        var a = 1 * Time.DeltaTime;
+        var a = Time.DeltaTime;
         _normal = math.mul(quaternion.EulerYXZ(a, a, 0), _normal);
         var normal = _normal;
 

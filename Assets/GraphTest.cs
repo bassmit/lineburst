@@ -19,12 +19,10 @@ partial class GraphTestSystem : SystemBase
 {
     protected override void OnUpdate()
     {
-        var fix = 1;
-        
         Job
             .WithCode(() =>
             {
-                var size = fix * new float2(1, 1);
+                var size = new float2(1, 1);
                 const float border = .5f;
 
                 var pos = new float2(0, 0);
