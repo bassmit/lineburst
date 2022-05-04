@@ -1,10 +1,10 @@
 {
   "name": "com.bassmit.lineburst",
   "displayName": "LineBurst",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "unity": "2020.3",
   "dependencies": {
-    "com.unity.entities": "0.17.0-preview.42"
+    "com.unity.entities": "0.50.1-preview.2"
   },
   "description": "Plot functions and draw large amounts of lines, shapes and text to the game and scene view. The Unity Physics package forms the basis of this package",
   "author" : {

@@ -1,4 +1,4 @@
-﻿using Unity.Entities;
+using Unity.Entities;
 using UnityEngine;
 using LineBurst;
 using Unity.Mathematics;
@@ -14,7 +14,7 @@ class BurstTest : MonoBehaviour
 }
 
 [DisableAutoCreation]
-class BurstTestSystem : SystemBase
+partial class BurstTestSystem : SystemBase
 {
     float3 _normal = new float3(0, 1, 0);
 

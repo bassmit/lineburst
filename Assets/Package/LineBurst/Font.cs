@@ -15,11 +15,11 @@ namespace LineBurst
         internal BlobArray<int2> Indices;
         internal BlobArray<Glyph.Line> Lines;
 
-        public unsafe void Draw(FixedString32 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
-        public unsafe void Draw(FixedString64 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
-        public unsafe void Draw(FixedString128 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
-        public unsafe void Draw(FixedString512 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
-        public unsafe void Draw(FixedString4096 text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+        public unsafe void Draw(FixedString32Bytes text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+        public unsafe void Draw(FixedString64Bytes text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+        public unsafe void Draw(FixedString128Bytes text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+        public unsafe void Draw(FixedString512Bytes text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
+        public unsafe void Draw(FixedString4096Bytes text, Matrix4x4 transform, Color color) => Draw(text.GetUnsafePtr(), text.Length, transform, color);
 
         unsafe void Draw(byte* text, int length, Matrix4x4 transform, Color color)
         {
