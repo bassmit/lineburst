@@ -30,10 +30,10 @@ namespace LineBurst
                 _offsetY -= LegendScale * .3f;
             }
 
-            public void Plot(Func<float, float> f, int samples, Color color, FixedString32 description = default, NativeArray<float> explicitSamples = default, float maxAmplitude = 1e+6f)
+            public void Plot(Func<float, float> f, int samples, Color color, FixedString32Bytes description = default, NativeArray<float> explicitSamples = default, float maxAmplitude = 1e+6f)
                 => Plot(new FuncWrapper(f), samples, color, description, explicitSamples, maxAmplitude);
 
-            public void Plot<T>(T f, int samples, Color color, FixedString32 description = default, NativeArray<float> explicitSamples = default, float maxAmplitude = 1e+6f) where T : IFunction
+            public void Plot<T>(T f, int samples, Color color, FixedString32Bytes description = default, NativeArray<float> explicitSamples = default, float maxAmplitude = 1e+6f) where T : IFunction
             {
                 var l = new NativeList<float>(samples + (explicitSamples.IsCreated ? explicitSamples.Length : 0), Allocator.Temp);
                 l.Add(_s.Min.x);
@@ -119,7 +119,7 @@ namespace LineBurst
                 var x = _s.Min.x - ModEpsilon(_s.Min.x, step);
                 while (x < _s.Max.x + Epsilon)
                 {
-                    FixedString32 s = $"{System.Math.Round(x, 3)}";
+                    FixedString32Bytes s = $"{System.Math.Round(x, 3)}";
                     var l = math.abs(x) < Epsilon ? s.Length + 1.4f : s.Length;
                     var pos = math.transform(_s.Tr, new float3(x, y, 0));
                     var tr = float4x4.TRS(pos, _s.Rot, new float3(MarkingScale, MarkingScale, 1));
@@ -137,7 +137,7 @@ namespace LineBurst
                 {
                     if (math.abs(y) > Epsilon)
                     {
-                        FixedString32 s = $"{System.Math.Round(y, 3)}";
+                        FixedString32Bytes s = $"{System.Math.Round(y, 3)}";
                         var pos = math.transform(_s.Tr, new float3(x, y, 0));
                         var tr = float4x4.TRS(pos, _s.Rot, new float3(MarkingScale, MarkingScale, 1));
                         tr = math.mul(tr, float4x4.Translate(new float3(-(s.Length + .2f) * FontWidth, .5f, 0)));

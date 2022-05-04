@@ -15,7 +15,7 @@ class GraphTest : MonoBehaviour
 }
 
 [DisableAutoCreation]
-class GraphTestSystem : SystemBase
+partial class GraphTestSystem : SystemBase
 {
     protected override void OnUpdate()
     {
