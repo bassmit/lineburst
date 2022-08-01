@@ -29,7 +29,7 @@ When the amount of elements to be drawn is known allocate the required buffer in
     for (int i = 0; i < amount; i++)
         spheres.Draw(points[i], radii[i], colors[i]);
         
-For additional examples install the Samples through the package manager, or check out the master branch which contains a 2020.3 LTS Unity project.
+For additional examples install the Samples through the package manager, or check out the master branch which contains a 2021.3 LTS Unity project.
 
 ## Notes
 The default font is missing lower case letters and many signs, a basic editor is provided in the scene view when a font is selected, pull requests are welcome ; ) The Unity Physics package forms the basis of this package.
