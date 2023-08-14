@@ -10,7 +10,7 @@ class GraphTest : MonoBehaviour
     {
         var world = World.All[0];
         var s = world.CreateSystem<GraphTestSystem>();
-        world.GetOrCreateSystem<SimulationSystemGroup>().AddSystemToUpdateList(s);
+        world.GetOrCreateSystemManaged<SimulationSystemGroup>().AddSystemToUpdateList(s);
     }
 }
 

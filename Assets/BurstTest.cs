@@ -9,7 +9,7 @@ class BurstTest : MonoBehaviour
     {
         var world = World.All[0];
         var s = world.CreateSystem<BurstTestSystem>();
-        world.GetOrCreateSystem<SimulationSystemGroup>().AddSystemToUpdateList(s);
+        world.GetOrCreateSystemManaged<SimulationSystemGroup>().AddSystemToUpdateList(s);
     }
 }
 
@@ -20,7 +20,7 @@ partial class BurstTestSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        var a = Time.DeltaTime;
+        var a = SystemAPI.Time.DeltaTime;
         _normal = math.mul(quaternion.EulerYXZ(a, a, 0), _normal);
         var normal = _normal;
 
