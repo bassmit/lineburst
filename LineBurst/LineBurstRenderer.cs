@@ -1,10 +1,8 @@
 using System;
 using Unity.Jobs;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
-using UnityEngine.Serialization;
 
 namespace LineBurst
 {
@@ -30,7 +28,7 @@ namespace LineBurst
 
             Assert.IsTrue(Managed.Instance == null);
             Managed.Instance = new Managed(MaxLines, LineMaterial, Font.Convert());
-            RenderPipelineManager.endFrameRendering += (arg1, arg2) => GameViewRender();
+            RenderPipelineManager.endFrameRendering += (_, _) => GameViewRender();
         }
 
         void OnPostRender()
